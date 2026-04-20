@@ -209,3 +209,218 @@ BEGIN
     DEFPUSHBUTTON   "OK",                   IDOK,                    166, 136,  50,  14
     PUSHBUTTON      "Cancel",               IDCANCEL,                223, 136,  50,  14
 END
+
+IDD_SETTINGS DIALOGEX 0, 0, 320, 300
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Settings"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "General",                -1,
+                    7,   4, 306,  62
+    LTEXT           "Language:",              -1,
+                    14,  16,  80,   9
+    COMBOBOX        IDC_SETTINGS_LANGUAGE,
+                    100, 14, 206,  80,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Theme:",                 -1,
+                    14,  32,  80,   9
+    COMBOBOX        IDC_SETTINGS_THEME,
+                    100, 30, 206,  60,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Display name when connected:", -1,
+                    14,  48, 104,   9
+    EDITTEXT        IDC_SETTINGS_DISPLAY_NAME,
+                    120, 46, 186,  12, ES_AUTOHSCROLL
+    GROUPBOX        "Desktop features",       -1,
+                    7,  70, 306,  58
+    AUTOCHECKBOX    "Enable audio",           IDC_SETTINGS_AUDIO,
+                    14,  82, 292,  10
+    AUTOCHECKBOX    "Enable clipboard",       IDC_SETTINGS_CLIPBOARD,
+                    14,  94, 292,  10
+    AUTOCHECKBOX    "Show shape of remote cursor",
+                                              IDC_SETTINGS_CURSOR_SHAPE,
+                    14, 106, 292,  10
+    AUTOCHECKBOX    "Show position of remote cursor",
+                                              IDC_SETTINGS_CURSOR_POSITION,
+                    14, 118, 292,  10
+    GROUPBOX        "Desktop (appearance and other)", -1,
+                    7, 132, 306,  58
+    AUTOCHECKBOX    "Disable desktop effects",
+                                              IDC_SETTINGS_DISABLE_EFFECTS,
+                    14, 144, 292,  10
+    AUTOCHECKBOX    "Disable desktop wallpaper",
+                                              IDC_SETTINGS_DISABLE_WALLPAPER,
+                    14, 156, 292,  10
+    AUTOCHECKBOX    "Lock computer at disconnect",
+                                              IDC_SETTINGS_LOCK_AT_DISCONNECT,
+                    14, 168, 292,  10
+    AUTOCHECKBOX    "Block remote input",     IDC_SETTINGS_BLOCK_REMOTE_INPUT,
+                    14, 180, 292,  10
+    GROUPBOX        "Update",                 -1,
+                    7, 194, 306,  52
+    AUTOCHECKBOX    "Check for updates on startup",
+                                              IDC_SETTINGS_CHECK_UPDATES,
+                    14, 206, 180,  10
+    PUSHBUTTON      "Check for updates",      IDC_SETTINGS_CHECK_FOR_UPDATES_NOW,
+                    200, 204, 106,  14
+    AUTOCHECKBOX    "Use custom update server",
+                                              IDC_SETTINGS_CUSTOM_UPDATE_SERVER,
+                    14, 220, 180,  10
+    LTEXT           "Server:",                -1,
+                    14, 234,  30,   9
+    EDITTEXT        IDC_SETTINGS_UPDATE_SERVER,
+                    50, 232, 256,  12, ES_AUTOHSCROLL
+    GROUPBOX        "Logging",                -1,
+                    7, 250, 306,  30
+    AUTOCHECKBOX    "Enable",                 IDC_SETTINGS_LOG_ENABLED,
+                    14, 262,  52,  10
+    COMBOBOX        IDC_SETTINGS_LOG_LEVEL,
+                    70, 260,  70,  60,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_SETTINGS_LOG_PATH,
+                    144, 260, 142,  12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...",                    IDC_SETTINGS_LOG_BROWSE,
+                    290, 260,  16,  12
+    DEFPUSHBUTTON   "OK",                     IDOK,
+                    206, 282,  50,  14
+    PUSHBUTTON      "Cancel",                 IDCANCEL,
+                    263, 282,  50,  14
+END
+
+IDD_STATISTICS DIALOGEX 0, 0, 250, 280
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Statistics"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "",                          -1,                                 7,   4, 236, 250
+    LTEXT           "Duration:",                 -1,                                14,  16, 120,   9
+    LTEXT           "",                          IDC_STATS_DURATION_VALUE,         138,  16, 104,   9
+    LTEXT           "Total TCP RX/TX:",          -1,                                14,  28, 120,   9
+    LTEXT           "",                          IDC_STATS_TCP_TOTAL_VALUE,        138,  28, 104,   9
+    LTEXT           "Speed TCP RX/TX:",          -1,                                14,  40, 120,   9
+    LTEXT           "",                          IDC_STATS_TCP_SPEED_VALUE,        138,  40, 104,   9
+    LTEXT           "Total UDP RX/TX:",          -1,                                14,  52, 120,   9
+    LTEXT           "",                          IDC_STATS_UDP_TOTAL_VALUE,        138,  52, 104,   9
+    LTEXT           "Speed UDP RX/TX:",          -1,                                14,  64, 120,   9
+    LTEXT           "",                          IDC_STATS_UDP_SPEED_VALUE,        138,  64, 104,   9
+    LTEXT           "Video Packet Count:",       -1,                                14,  76, 120,   9
+    LTEXT           "",                          IDC_STATS_VIDEO_PACKETS_VALUE,    138,  76, 104,   9
+    LTEXT           "Video Pause/Resume:",       -1,                                14,  88, 120,   9
+    LTEXT           "",                          IDC_STATS_VIDEO_PAUSE_RESUME_VALUE,138, 88, 104,   9
+    LTEXT           "Video Packet MIN/MAX/AVG:", -1,                                14, 100, 120,   9
+    LTEXT           "",                          IDC_STATS_VIDEO_PACKET_MIN_MAX_AVG,138,100, 104,   9
+    LTEXT           "Audio Packet Count:",       -1,                                14, 112, 120,   9
+    LTEXT           "",                          IDC_STATS_AUDIO_PACKETS_VALUE,    138, 112, 104,   9
+    LTEXT           "Audio Pause/Resume:",       -1,                                14, 124, 120,   9
+    LTEXT           "",                          IDC_STATS_AUDIO_PAUSE_RESUME_VALUE,138,124, 104,   9
+    LTEXT           "Audio Packet MIN/MAX/AVG:", -1,                                14, 136, 120,   9
+    LTEXT           "",                          IDC_STATS_AUDIO_PACKET_MIN_MAX_AVG,138,136, 104,   9
+    LTEXT           "Video Capturer/Encoder:",   -1,                                14, 148, 120,   9
+    LTEXT           "",                          IDC_STATS_VIDEO_CAPTURER_ENCODER, 138, 148, 104,   9
+    LTEXT           "FPS:",                      -1,                                14, 160, 120,   9
+    LTEXT           "",                          IDC_STATS_FPS_VALUE,              138, 160, 104,   9
+    LTEXT           "Mouse Event Send/Drop:",    -1,                                14, 172, 120,   9
+    LTEXT           "",                          IDC_STATS_MOUSE_SEND_DROP_VALUE,  138, 172, 104,   9
+    LTEXT           "Key Event Send:",           -1,                                14, 184, 120,   9
+    LTEXT           "",                          IDC_STATS_KEY_SEND_VALUE,         138, 184, 104,   9
+    LTEXT           "Text Event Send:",          -1,                                14, 196, 120,   9
+    LTEXT           "",                          IDC_STATS_TEXT_SEND_VALUE,        138, 196, 104,   9
+    LTEXT           "Clipboard Event R/S:",      -1,                                14, 208, 120,   9
+    LTEXT           "",                          IDC_STATS_CLIPBOARD_READ_SEND_VALUE,138,208,104,   9
+    LTEXT           "Cursor Shape Count/Cache:", -1,                                14, 220, 120,   9
+    LTEXT           "",                          IDC_STATS_CURSOR_SHAPE_COUNT_CACHE,138,220, 104,   9
+    LTEXT           "Cursor Shape Cache Size:",  -1,                                14, 232, 120,   9
+    LTEXT           "",                          IDC_STATS_CURSOR_SHAPE_CACHE_SIZE,138, 232, 104,   9
+    LTEXT           "Cursor Pos Count:",         -1,                                14, 244, 120,   9
+    LTEXT           "",                          IDC_STATS_CURSOR_POS_COUNT_VALUE, 138, 244, 104,   9
+    DEFPUSHBUTTON   "OK",                        IDOK,                             193, 260,  50,  14
+END
+
+IDD_FILE_TRANSFER DIALOGEX 0, 0, 320, 160
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "File Transfer"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Current Task: Creating a list of files to copy...",
+                                    IDC_FILE_TRANSFER_STATUS,
+                                                              7,   7, 306,   9
+    LTEXT           "",             IDC_FILE_TRANSFER_CURRENT_ITEM,
+                                                              7,  22, 306,   9
+    LTEXT           "Speed: ...",   IDC_FILE_TRANSFER_SPEED,
+                                                              7,  36, 306,   9
+    GROUPBOX        "Progress",     -1,                        7,  52, 306,  78
+    LTEXT           "Total:",       IDC_FILE_TRANSFER_OVERALL_LABEL,
+                                                             14,  66,  40,   9
+    CONTROL         "",             IDC_FILE_TRANSFER_PROGRESS_OVERALL,
+                                    "msctls_progress32", WS_BORDER,
+                                                             58,  65, 248,  12
+    LTEXT           "Item:",        IDC_FILE_TRANSFER_ITEM_LABEL,
+                                                             14,  86,  40,   9
+    CONTROL         "",             IDC_FILE_TRANSFER_PROGRESS_ITEM,
+                                    "msctls_progress32", WS_BORDER,
+                                                             58,  85, 248,  12
+    PUSHBUTTON      "Cancel",       IDCANCEL,               263, 139,  50,  14
+END
+
+IDD_FILE_REMOVE DIALOGEX 0, 0, 250, 90
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Deleting Items"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Creating a list of files to delete...",
+                                    IDC_FILE_REMOVE_CURRENT_ITEM,
+                                                           7,   7, 236,   9
+    CONTROL         "",             IDC_FILE_REMOVE_PROGRESS,
+                                    "msctls_progress32", WS_BORDER,
+                                                           7,  22, 236,  12
+    PUSHBUTTON      "Cancel",       IDCANCEL,            193,  69,  50,  14
+END
+
+IDD_LOCAL_COMPUTER DIALOGEX 0, 0, 300, 200
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Computer"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Group:",      -1,                                 7,   9,  60,   9
+    COMBOBOX        IDC_LOCAL_COMPUTER_GROUP,                         70,   7, 223,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Name:",       -1,                                 7,  25,  60,   9
+    EDITTEXT        IDC_LOCAL_COMPUTER_NAME,                          70,  23, 223,  12, ES_AUTOHSCROLL
+    LTEXT           "Address:",    -1,                                 7,  41,  60,   9
+    EDITTEXT        IDC_LOCAL_COMPUTER_ADDRESS,                       70,  39, 223,  12, ES_AUTOHSCROLL
+    LTEXT           "Username:",   -1,                                 7,  57,  60,   9
+    EDITTEXT        IDC_LOCAL_COMPUTER_USERNAME,                      70,  55, 223,  12, ES_AUTOHSCROLL
+    LTEXT           "Password:",   -1,                                 7,  73,  60,   9
+    EDITTEXT        IDC_LOCAL_COMPUTER_PASSWORD,                      70,  71, 207,  12,
+                    ES_AUTOHSCROLL | ES_PASSWORD
+    PUSHBUTTON      "...",         IDC_LOCAL_COMPUTER_SHOW_PASSWORD, 280,  70,  13,  14
+    LTEXT           "Comment:",    -1,                                 7,  90, 286,   9
+    EDITTEXT        IDC_LOCAL_COMPUTER_COMMENT,                        7, 102, 286,  70,
+                    ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | WS_VSCROLL
+    DEFPUSHBUTTON   "OK",          IDOK,                             188, 179,  50,  14
+    PUSHBUTTON      "Cancel",      IDCANCEL,                         243, 179,  50,  14
+END
+
+IDD_ROUTER_USER DIALOGEX 0, 0, 280, 220
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "User Properties"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Name:",                  -1,                                    7,  10,  70,   9
+    EDITTEXT        IDC_ROUTER_USER_USERNAME,                                       80,   8, 193,  12, ES_AUTOHSCROLL
+    LTEXT           "Password:",              -1,                                    7,  26,  70,   9
+    EDITTEXT        IDC_ROUTER_USER_PASSWORD,                                       80,  24, 177,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    PUSHBUTTON      "...",                    IDC_ROUTER_USER_SHOW_PASSWORD,       260,  23,  13,  14
+    LTEXT           "Password (retry):",      -1,                                    7,  42,  70,   9
+    EDITTEXT        IDC_ROUTER_USER_PASSWORD_RETRY,                                 80,  40, 193,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    AUTOCHECKBOX    "Disable User Account",   IDC_ROUTER_USER_DISABLE,               7,  60, 266,  10
+    GROUPBOX        "Allowed Session Types:", IDC_ROUTER_USER_SESSIONS_GROUP,        7,  75, 266, 120
+    AUTOCHECKBOX    "Manage Desktop",         IDC_ROUTER_USER_SESSION_DESKTOP_MANAGE,  14,  88, 252,  10
+    AUTOCHECKBOX    "View Desktop",           IDC_ROUTER_USER_SESSION_DESKTOP_VIEW,    14, 102, 252,  10
+    AUTOCHECKBOX    "File Transfer",          IDC_ROUTER_USER_SESSION_FILE_TRANSFER,   14, 116, 252,  10
+    AUTOCHECKBOX    "System Information",     IDC_ROUTER_USER_SESSION_SYSTEM_INFO,     14, 130, 252,  10
+    AUTOCHECKBOX    "Text Chat",              IDC_ROUTER_USER_SESSION_TEXT_CHAT,       14, 144, 252,  10
+    AUTOCHECKBOX    "Port Forwarding",        IDC_ROUTER_USER_SESSION_PORT_FORWARDING, 14, 158, 252,  10
+    DEFPUSHBUTTON   "OK",                     IDOK,                                168, 200,  50,  14
+    PUSHBUTTON      "Cancel",                 IDCANCEL,                            223, 200,  50,  14
+END

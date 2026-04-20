@@ -29,11 +29,19 @@ list(APPEND SOURCE_CLIENT_WIN32
     about_dialog.h
     auth_dialog.cc
     auth_dialog.h
+    chat_session_window.cc
+    chat_session_window.h
     desktop_config_dialog.cc
     desktop_config_dialog.h
     download_dialog.cc
     download_dialog.h
     entry_point.cc
+    file_remove_dialog.cc
+    file_remove_dialog.h
+    file_transfer_dialog.cc
+    file_transfer_dialog.h
+    local_computer_dialog.cc
+    local_computer_dialog.h
     main_window.cc
     main_window.h
     record_settings_dialog.cc
@@ -41,8 +49,16 @@ list(APPEND SOURCE_CLIENT_WIN32
     resource.h
     router_dialog.cc
     router_dialog.h
+    router_user_dialog.cc
+    router_user_dialog.h
+    settings_dialog.cc
+    settings_dialog.h
+    statistics_dialog.cc
+    statistics_dialog.h
     status_dialog.cc
     status_dialog.h
+    task_manager_window.cc
+    task_manager_window.h
     client.rc
     client.manifest)
 
