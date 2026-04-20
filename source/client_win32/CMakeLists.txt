@@ -83,12 +83,28 @@ list(APPEND SOURCE_CLIENT_WIN32
     sys_info_local_user_groups.h
     sys_info_local_users.cc
     sys_info_local_users.h
+    sys_info_monitors.cc
+    sys_info_monitors.h
+    sys_info_net_adapters.cc
+    sys_info_net_adapters.h
+    sys_info_net_shares.cc
+    sys_info_net_shares.h
+    sys_info_open_files.cc
+    sys_info_open_files.h
+    sys_info_power_options.cc
+    sys_info_power_options.h
+    sys_info_printers.cc
+    sys_info_printers.h
     sys_info_processes.cc
     sys_info_processes.h
+    sys_info_routes.cc
+    sys_info_routes.h
     sys_info_services.cc
     sys_info_services.h
     sys_info_summary.cc
     sys_info_summary.h
+    sys_info_video_adapters.cc
+    sys_info_video_adapters.h
     task_manager_window.cc
     task_manager_window.h
     client.rc
