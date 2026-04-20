@@ -25,12 +25,24 @@
 list(APPEND SOURCE_CLIENT_WIN32
     app.cc
     app.h
+    about_dialog.cc
+    about_dialog.h
     auth_dialog.cc
     auth_dialog.h
+    desktop_config_dialog.cc
+    desktop_config_dialog.h
+    download_dialog.cc
+    download_dialog.h
     entry_point.cc
     main_window.cc
     main_window.h
+    record_settings_dialog.cc
+    record_settings_dialog.h
     resource.h
+    router_dialog.cc
+    router_dialog.h
+    status_dialog.cc
+    status_dialog.h
     client.rc
     client.manifest)
 
@@ -47,4 +59,7 @@ target_link_libraries(aspia_client_win32 PRIVATE
     dwmapi
     uxtheme
     version
-    shlwapi)
+    shlwapi
+    shell32
+    ole32
+    uuid)
