@@ -6,10 +6,6 @@
     "curl",
     "enet",
     "gtest",
-    {
-      "name": "icu",
-      "platform": "linux | osx"
-    },
     "inipp",
     "libvpx",
     "libjpeg-turbo",
@@ -27,56 +23,12 @@
         "sql-sqlite",
         "sql",
         "png",
-        {
-          "name": "icu",
-          "platform": "linux | osx"
-        },
         "pcre2",
         "network",
         "harfbuzz",
         "gui",
         "freetype",
-        "doubleconversion",
-        {
-          "name": "fontconfig",
-          "platform": "linux"
-        },
-        {
-          "name": "xrender",
-          "platform": "linux"
-        },
-        {
-          "name": "xlib",
-          "platform": "linux"
-        },
-        {
-          "name": "xkbcommon-x11",
-          "platform": "linux"
-        },
-        {
-          "name": "xkb",
-          "platform": "linux"
-        },
-        {
-          "name": "xcb-xlib",
-          "platform": "linux"
-        },
-        {
-          "name": "xcb",
-          "platform": "linux"
-        },
-        {
-          "name": "opengl",
-          "platform": "linux | osx"
-        },
-        {
-          "name": "egl",
-          "platform": "linux"
-        },
-        {
-          "name": "cups",
-          "platform": "osx"
-        }
+        "doubleconversion"
       ]
     },
     "qtsvg",

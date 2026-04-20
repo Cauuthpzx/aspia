@@ -23,6 +23,8 @@ list(APPEND SOURCE_COMMON
     clipboard_file_transfer.h
     clipboard_monitor.cc
     clipboard_monitor.h
+    clipboard_win.cc
+    clipboard_win.h
     desktop_session_constants.cc
     desktop_session_constants.h
     file_depacketizer.cc
@@ -31,6 +33,7 @@ list(APPEND SOURCE_COMMON
     file_packetizer.cc
     file_packetizer.h
     file_platform_util.h
+    file_platform_util_win.cc
     file_task.cc
     file_task.h
     file_task_factory.cc
@@ -47,33 +50,6 @@ list(APPEND SOURCE_COMMON
     update_checker.h
     update_info.cc
     update_info.h)
-
-if (WIN32)
-    list(APPEND SOURCE_COMMON
-        clipboard_win.cc
-        clipboard_win.h
-        file_platform_util_win.cc)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_COMMON
-        clipboard_x11.cc
-        clipboard_x11.h
-        file_platform_util_linux.cc)
-endif()
-
-if (APPLE)
-    list(APPEND SOURCE_COMMON
-        clipboard_mac.mm
-        clipboard_mac.h
-        file_platform_util_mac.mm)
-
-    list(APPEND SOURCE_COMMON_MAC
-        mac/file_data_provider.mm
-        mac/file_data_provider.h
-        mac/file_promise_writer.mm
-        mac/file_promise_writer.h)
-endif()
 
 list(APPEND SOURCE_COMMON_UI
     ui/about_dialog.cc
@@ -105,45 +81,33 @@ list(APPEND SOURCE_COMMON_UI
     ui/status_dialog.cc
     ui/status_dialog.h
     ui/status_dialog.ui
+    ui/taskbar_button.cc
+    ui/taskbar_button.h
+    ui/taskbar_progress.cc
+    ui/taskbar_progress.h
     ui/update_dialog.cc
     ui/update_dialog.h
     ui/update_dialog.ui)
 
-if (WIN32)
-    list(APPEND SOURCE_COMMON_UI
-        ui/taskbar_button.cc
-        ui/taskbar_button.h
-        ui/taskbar_progress.cc
-        ui/taskbar_progress.h)
-
-    list(APPEND SOURCE_COMMON_WIN
-        win/file_object.cc
-        win/file_object.h
-        win/file_stream.cc
-        win/file_stream.h
-        win/format_enumerator.cc
-        win/format_enumerator.h)
-endif()
+list(APPEND SOURCE_COMMON_WIN
+    win/file_object.cc
+    win/file_object.h
+    win/file_stream.cc
+    win/file_stream.h
+    win/format_enumerator.cc
+    win/format_enumerator.h)
 
 list(APPEND SOURCE_COMMON_RESOURCES resources/common.qrc)
 
 source_group("" FILES ${SOURCE_COMMON})
 source_group(ui FILES ${SOURCE_COMMON_UI})
 source_group(resources FILES ${SOURCE_COMMON_RESOURCES})
-
-if (WIN32)
-    source_group(win FILES ${SOURCE_COMMON_WIN})
-endif()
-
-if (APPLE)
-    source_group(mac FILES ${SOURCE_COMMON_MAC})
-endif()
+source_group(win FILES ${SOURCE_COMMON_WIN})
 
 add_library(aspia_common STATIC
     ${SOURCE_COMMON}
     ${SOURCE_COMMON_UI}
     ${SOURCE_COMMON_WIN}
-    ${SOURCE_COMMON_MAC}
     ${SOURCE_COMMON_RESOURCES})
 target_link_libraries(aspia_common PRIVATE
     aspia_base

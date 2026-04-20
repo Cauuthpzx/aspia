@@ -33,30 +33,16 @@ list(APPEND SOURCE_RELAY
     settings.cc
     settings.h)
 
-if (WIN32)
-    list(APPEND SOURCE_RELAY_WIN win/relay.rc)
-endif()
+list(APPEND SOURCE_RELAY_WIN win/relay.rc)
 
 source_group("" FILES ${SOURCE_RELAY})
+source_group(win FILES ${SOURCE_RELAY_WIN})
 
-if (WIN32)
-    source_group(win FILES ${SOURCE_RELAY_WIN})
-    set(RELAY_PLATFORM_LIBS avrt comsupp crypt32 dbghelp netapi32 version)
-endif()
-
-if (LINUX)
-    set(RELAY_PLATFORM_LIBS stdc++fs)
-endif()
-
-if (APPLE)
-    set(RELAY_PLATFORM_LIBS ${FOUNDATION_LIB})
-endif()
+set(RELAY_PLATFORM_LIBS avrt comsupp crypt32 dbghelp netapi32 version)
 
 add_executable(aspia_relay ${SOURCE_RELAY} ${SOURCE_RELAY_WIN})
 
-if (WIN32)
-    set_target_properties(aspia_relay PROPERTIES LINK_FLAGS "/MANIFEST:NO")
-endif()
+set_target_properties(aspia_relay PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 
 target_link_libraries(aspia_relay
     aspia_base

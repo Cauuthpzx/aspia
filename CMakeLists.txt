@@ -22,11 +22,13 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project(aspia)
 
+if (NOT WIN32)
+    message(FATAL_ERROR "Aspia now targets Windows only. Use a Windows host with a local-win-* preset.")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/source/cmake)
 
-if (WIN32)
-    include(FindWDK)
-endif()
+include(FindWDK)
 
 set(ASPIA_VERSION_MAJOR 3)
 set(ASPIA_VERSION_MINOR 0)
@@ -48,18 +50,7 @@ add_definitions(-DASPIA_VERSION_MAJOR=${ASPIA_VERSION_MAJOR}
                 -DASPIA_VERSION_MINOR=${ASPIA_VERSION_MINOR}
                 -DASPIA_VERSION_PATCH=${ASPIA_VERSION_PATCH})
 
-if (UNIX AND NOT APPLE)
-    message(STATUS "Linux detected")
-    set(LINUX TRUE)
-endif()
-
-if (APPLE)
-    message(STATUS "MacOSX detected")
-endif()
-
-if (WIN32)
-    message(STATUS "Windows detected")
-endif()
+message(STATUS "Windows detected")
 
 set(CMAKE_SKIP_BUILD_RPATH ON)
 
@@ -80,57 +71,10 @@ find_package(unofficial-enet CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
 find_path(INIPP_INCLUDE_DIRS "inipp.h")
 
-if (WIN32)
-    find_package(Qt6EntryPointPrivate CONFIG REQUIRED)
-    find_package(WDK REQUIRED)
+find_package(Qt6EntryPointPrivate CONFIG REQUIRED)
+find_package(WDK REQUIRED)
 
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-
-if (LINUX)
-    find_package(Qt6EglFSDeviceIntegrationPrivate CONFIG REQUIRED)
-    find_package(Qt6InputSupportPrivate CONFIG REQUIRED)
-    find_package(Qt6OpenGL CONFIG REQUIRED)
-    find_package(Qt6XcbQpaPrivate CONFIG REQUIRED)
-
-    find_library(XFIXES_LIB NAMES libXfixes Xfixes REQUIRED)
-    message(STATUS "XFixes library: ${XFIXES_LIB}")
-
-    find_library(XDAMAGE_LIB NAMES libXdamage Xdamage REQUIRED)
-    message(STATUS "XDamage library: ${XDAMAGE_LIB}")
-
-    find_library(XRANDR_LIB NAMES libXrandr Xrandr REQUIRED)
-    message(STATUS "XRandr library: ${XRANDR_LIB}")
-
-    find_library(XTST_LIB NAMES libXtst Xtst REQUIRED)
-    message(STATUS "XTst library: ${XTST_LIB}")
-
-    find_library(XI_LIB NAMES libXi Xi REQUIRED)
-    message(STATUS "Xi library: ${XI_LIB}")
-
-    find_library(X11_LIB NAMES libX11 X11 REQUIRED)
-    message(STATUS "X11 library: ${X11_LIB}")
-
-    find_library(XEXT_LIB NAMES libXext Xext REQUIRED)
-    message(STATUS "Xext library: ${XEXT_LIB}")
-endif()
-
-if (APPLE)
-    if (${VCPKG_TARGET_TRIPLET} STREQUAL "arm64-osx")
-        set(CMAKE_OSX_ARCHITECTURES "arm64")
-    else()
-        set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    endif()
-
-    message(STATUS "CMAKE_OSX_ARCHITECTURES: ${CMAKE_OSX_ARCHITECTURES}")
-
-    find_package(Qt6OpenGL CONFIG REQUIRED)
-
-    find_library(FOUNDATION_LIB Foundation)
-    find_library(COREAUDIO_LIB CoreAudio)
-    find_library(AUDIOTOOLBOX_LIB AudioToolbox)
-    find_program(CODESIGN_BIN NAMES codesign)
-endif()
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

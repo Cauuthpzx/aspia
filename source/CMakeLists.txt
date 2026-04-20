@@ -24,21 +24,19 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 list(APPEND CMAKE_AUTORCC_OPTIONS -compress 9 -threshold 5)
 
-if (WIN32)
-    # Target version.
-    add_definitions(-DNTDDI_VERSION=0x06010000
-                    -D_WIN32_WINNT=0x0601
-                    -D_WIN32_WINDOWS=_WIN32_WINNT
-                    -DWINVER=_WIN32_WINNT
-                    -D_WIN32_IE=0x0800
-                    -DPSAPI_VERSION=2)
+# Target version.
+add_definitions(-DNTDDI_VERSION=0x06010000
+                -D_WIN32_WINNT=0x0601
+                -D_WIN32_WINDOWS=_WIN32_WINNT
+                -DWINVER=_WIN32_WINNT
+                -D_WIN32_IE=0x0800
+                -DPSAPI_VERSION=2)
 
-    # Other definitions.
-    add_definitions(-D_UNICODE
-                    -DUNICODE
-                    -DWIN32_LEAN_AND_MEAN
-                    -DNOMINMAX)
-endif()
+# Other definitions.
+add_definitions(-D_UNICODE
+                -DUNICODE
+                -DWIN32_LEAN_AND_MEAN
+                -DNOMINMAX)
 
 # For Asio.
 add_definitions(-DASIO_STANDALONE
@@ -63,23 +61,7 @@ set(QT_COMMON_LIBS
     Qt6::Svg
     Qt6::Xml)
 
-if (WIN32)
-    set(QT_PLATFORM_LIBS Qt6::QWindowsIntegrationPlugin)
-endif()
-
-if (LINUX)
-    set(QT_PLATFORM_LIBS
-        Qt6::EglFSDeviceIntegrationPrivate Qt6::EglFSDeviceIntegrationPrivate_resources_1
-        Qt6::OpenGL
-        Qt6::InputSupportPrivate
-        Qt6::XcbQpaPrivate)
-endif()
-
-if (APPLE)
-    set(QT_PLATFORM_LIBS
-        Qt6::OpenGL
-        Qt6::QMacStylePlugin)
-endif()
+set(QT_PLATFORM_LIBS Qt6::QWindowsIntegrationPlugin)
 
 set(THIRD_PARTY_LIBS
     CURL::libcurl
@@ -137,27 +119,11 @@ if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /IGNORE:4099")
 endif()
 
-if (LINUX)
-    # C++ compliller flags.
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fPIC")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fPIC")
-
-    # C compiller flags.
-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fPIC")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fPIC")
-endif()
-
 check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT error)
 
 if (IPO_SUPPORTED)
-    if (LINUX)
-        message(STATUS "IPO/LTO supported but disabled for Linux")
-    else()
-        message(STATUS "IPO/LTO supported")
-
-        # Enable link-time code generatation.
-        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-    endif()
+    message(STATUS "IPO/LTO supported")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 else()
     message(STATUS "IPO/LTO not supported")
 endif()
@@ -220,10 +186,7 @@ add_subdirectory(relay)
 add_subdirectory(router)
 add_subdirectory(third_party)
 add_subdirectory(tools)
-
-if (WIN32 OR LINUX)
-    add_subdirectory(host)
-endif()
+add_subdirectory(host)
 
 ###################################################################################################
 # Installers
@@ -238,199 +201,5 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${ASPIA_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${ASPIA_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${ASPIA_VERSION_PATCH}")
 
-#--------------------------------------------------------------------------------------------------
-# Host
-#--------------------------------------------------------------------------------------------------
-
-if (LINUX)
-    install(TARGETS
-        aspia_host_core
-        aspia_host_service
-        aspia_host
-        aspia_desktop_agent
-        aspia_file_agent
-            BUNDLE DESTINATION . COMPONENT host
-            RUNTIME DESTINATION bin COMPONENT host
-            LIBRARY DESTINATION lib COMPONENT host)
-    set(CPACK_COMPONENT_HOST_NAME "aspia-host")
-    set(CPACK_COMPONENT_HOST_DISPLAY_NAME "Aspia Host")
-    set(CPACK_COMPONENT_HOST_DESCRIPTION "Remote desktop software.")
-
-    if (LINUX)
-        # Desktop file.
-        install(FILES host/linux/aspia-host.desktop
-            DESTINATION share/applications COMPONENT host)
-
-        # Host icons.
-        install(FILES host/linux/icons/16x16/aspia_host.png
-            DESTINATION share/icons/hicolor/16x16/apps COMPONENT host)
-        install(FILES host/linux/icons/24x24/aspia_host.png
-            DESTINATION share/icons/hicolor/24x24/apps COMPONENT host)
-        install(FILES host/linux/icons/32x32/aspia_host.png
-            DESTINATION share/icons/hicolor/32x32/apps COMPONENT host)
-        install(FILES host/linux/icons/48x48/aspia_host.png
-            DESTINATION share/icons/hicolor/48x48/apps COMPONENT host)
-        install(FILES host/linux/icons/64x64/aspia_host.png
-            DESTINATION share/icons/hicolor/64x64/apps COMPONENT host)
-
-        # Service file.
-        install(FILES host/linux/aspia-host-service.service
-            DESTINATION lib/systemd/system COMPONENT host)
-
-        set(CPACK_DEBIAN_HOST_FILE_NAME
-            "${CPACK_COMPONENT_HOST_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
-    endif()
-
-    if (APPLE)
-        set(CPACK_DMG_HOST_FILE_NAME "${CPACK_COMPONENT_HOST_NAME}-${CPACK_PACKAGE_VERSION}")
-    endif()
-endif()
-
-#--------------------------------------------------------------------------------------------------
-# Console
-#--------------------------------------------------------------------------------------------------
-
-install(TARGETS aspia_console
-    BUNDLE DESTINATION . COMPONENT console
-    RUNTIME DESTINATION bin COMPONENT console)
-set(CPACK_COMPONENT_CONSOLE_NAME "aspia-console")
-set(CPACK_COMPONENT_CONSOLE_DISPLAY_NAME "Aspia Console")
-set(CPACK_COMPONENT_CONSOLE_DESCRIPTION "Console for managing hosts and routers.")
-
-if (LINUX)
-    # Desktop file.
-    install(FILES console/linux/aspia-console.desktop
-        DESTINATION share/applications COMPONENT console)
-
-    # Mime types.
-    install(FILES console/linux/aspia-console.xml
-        DESTINATION share/mime/packages COMPONENT console)
-    install(CODE "execute_process(COMMAND update-mime-database /usr/share/mime)")
-
-    # Console icons.
-    install(FILES console/linux/icons/16x16/aspia_console.png
-        DESTINATION share/icons/hicolor/16x16/apps COMPONENT console)
-    install(FILES console/linux/icons/24x24/aspia_console.png
-        DESTINATION share/icons/hicolor/24x24/apps COMPONENT console)
-    install(FILES console/linux/icons/32x32/aspia_console.png
-        DESTINATION share/icons/hicolor/32x32/apps COMPONENT console)
-    install(FILES console/linux/icons/48x48/aspia_console.png
-        DESTINATION share/icons/hicolor/48x48/apps COMPONENT console)
-    install(FILES console/linux/icons/64x64/aspia_console.png
-        DESTINATION share/icons/hicolor/64x64/apps COMPONENT console)
-    install(FILES console/linux/icons/128x128/aspia_console.png
-        DESTINATION share/icons/hicolor/128x128/apps COMPONENT console)
-
-    # Address book icons.
-    install(FILES console/linux/icons/16x16/aspia_address_book.png
-        DESTINATION share/icons/hicolor/16x16/mimetypes COMPONENT console)
-    install(FILES console/linux/icons/24x24/aspia_address_book.png
-        DESTINATION share/icons/hicolor/24x24/mimetypes COMPONENT console)
-    install(FILES console/linux/icons/32x32/aspia_address_book.png
-        DESTINATION share/icons/hicolor/32x32/mimetypes COMPONENT console)
-    install(FILES console/linux/icons/48x48/aspia_address_book.png
-        DESTINATION share/icons/hicolor/48x48/mimetypes COMPONENT console)
-
-    set(CPACK_DEBIAN_CONSOLE_FILE_NAME
-        "${CPACK_COMPONENT_CONSOLE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
-endif()
-
-if (APPLE)
-    set(CPACK_DMG_CONSOLE_FILE_NAME "${CPACK_COMPONENT_CONSOLE_NAME}-${CPACK_PACKAGE_VERSION}")
-endif()
-
-#--------------------------------------------------------------------------------------------------
-# Client
-#--------------------------------------------------------------------------------------------------
-
-install(TARGETS aspia_client
-    BUNDLE DESTINATION . COMPONENT client
-    RUNTIME DESTINATION bin COMPONENT client)
-set(CPACK_COMPONENT_CLIENT_NAME "aspia-client")
-set(CPACK_COMPONENT_CLIENT_DISPLAY_NAME "Aspia Client")
-set(CPACK_COMPONENT_CLIENT_DESCRIPTION "Client for managing hosts.")
-
-if (LINUX)
-    # Desktop file.
-    install(FILES client/linux/aspia-client.desktop
-        DESTINATION share/applications COMPONENT client)
-
-    # Icons.
-    install(FILES client/linux/icons/16x16/aspia_client.png
-        DESTINATION share/icons/hicolor/16x16/apps COMPONENT client)
-    install(FILES client/linux/icons/24x24/aspia_client.png
-        DESTINATION share/icons/hicolor/24x24/apps COMPONENT client)
-    install(FILES client/linux/icons/32x32/aspia_client.png
-        DESTINATION share/icons/hicolor/32x32/apps COMPONENT client)
-    install(FILES client/linux/icons/48x48/aspia_client.png
-        DESTINATION share/icons/hicolor/48x48/apps COMPONENT client)
-    install(FILES client/linux/icons/64x64/aspia_client.png
-        DESTINATION share/icons/hicolor/64x64/apps COMPONENT client)
-    install(FILES client/linux/icons/128x128/aspia_client.png
-        DESTINATION share/icons/hicolor/128x128/apps COMPONENT client)
-
-    set(CPACK_DEBIAN_CLIENT_FILE_NAME
-        "${CPACK_COMPONENT_CLIENT_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
-endif()
-
-if (APPLE)
-    set(CPACK_DMG_CLIENT_FILE_NAME "${CPACK_COMPONENT_CLIENT_NAME}-${CPACK_PACKAGE_VERSION}")
-endif()
-
-#--------------------------------------------------------------------------------------------------
-# Router
-#--------------------------------------------------------------------------------------------------
-
-if (LINUX)
-    install(TARGETS aspia_router
-        BUNDLE DESTINATION . COMPONENT router
-        RUNTIME DESTINATION bin COMPONENT router)
-    set(CPACK_COMPONENT_ROUTER_NAME "aspia-router")
-    set(CPACK_COMPONENT_ROUTER_DISPLAY_NAME "Aspia Router")
-    set(CPACK_COMPONENT_ROUTER_DESCRIPTION "Provides a connection routing service.")
-
-    # Service file.
-    install(FILES router/linux/aspia-router.service DESTINATION lib/systemd/system COMPONENT router)
-
-    set(CPACK_DEBIAN_ROUTER_FILE_NAME
-        "${CPACK_COMPONENT_ROUTER_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
-endif()
-
-#--------------------------------------------------------------------------------------------------
-# Relay
-#--------------------------------------------------------------------------------------------------
-
-if (LINUX)
-    install(TARGETS aspia_relay
-        BUNDLE DESTINATION . COMPONENT relay
-        RUNTIME DESTINATION bin COMPONENT relay)
-    set(CPACK_COMPONENT_RELAY_NAME "aspia-relay")
-    set(CPACK_COMPONENT_RELAY_DISPLAY_NAME "Aspia Relay")
-    set(CPACK_COMPONENT_RELAY_DESCRIPTION "Provides a service for transferring data between peers.")
-
-    # Service file.
-    install(FILES relay/linux/aspia-relay.service DESTINATION lib/systemd/system COMPONENT relay)
-
-    set(CPACK_DEBIAN_RELAY_FILE_NAME
-        "${CPACK_COMPONENT_RELAY_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
-endif()
-
-if (LINUX)
-    set(CPACK_GENERATOR "DEB")
-
-    set(CPACK_DEB_COMPONENT_INSTALL ON)
-    set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-    set(CPACK_DEBIAN_PACKAGE_SECTION "net")
-    set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-
-    set(CPACK_COMPONENTS_ALL host console client router relay)
-endif()
-
-if (APPLE)
-    set(CPACK_GENERATOR "DragNDrop")
-
-    set(CPACK_COMPONENTS_GROUPING "IGNORE")
-    set(CPACK_COMPONENTS_ALL console client)
-endif()
-
+# Windows installers are built separately via WiX (installer/*.wxs).
 include(CPack)

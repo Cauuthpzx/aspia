@@ -51,6 +51,9 @@ list(APPEND SOURCE_BASE
     service.h
     service_controller.cc
     service_controller.h
+    service_controller_win.cc
+    service_controller_win.h
+    service_win.cc
     session_id.cc
     session_id.h
     shared_pointer.h
@@ -59,6 +62,7 @@ list(APPEND SOURCE_BASE
     smbios_parser.h
     sys_info.cc
     sys_info.h
+    sys_info_win.cc
     system_error.cc
     system_error.h
     thread.cc
@@ -69,28 +73,6 @@ list(APPEND SOURCE_BASE
     version_constants.h
     xml_settings.cc
     xml_settings.h)
-
-if (WIN32)
-    list(APPEND SOURCE_BASE
-        service_controller_win.cc
-        service_controller_win.h
-        service_win.cc
-        sys_info_win.cc)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE
-        service_controller_systemd.cc
-        service_controller_systemd.h
-        service_posix.cc
-        sys_info_linux.cc)
-endif()
-
-if (APPLE)
-    list(APPEND SOURCE_BASE
-        service_posix.cc
-        sys_info_mac.mm)
-endif()
 
 list(APPEND SOURCE_BASE_TESTS
     aligned_memory_unittest.cc
@@ -112,52 +94,28 @@ list(APPEND SOURCE_BASE_AUDIO
     audio/audio_capturer.h
     audio/audio_capturer_wrapper.cc
     audio/audio_capturer_wrapper.h
+    audio/audio_capturer_win.cc
+    audio/audio_capturer_win.h
     audio/audio_output.cc
     audio/audio_output.h
+    audio/audio_output_win.cc
+    audio/audio_output_win.h
     audio/audio_player.cc
     audio/audio_player.h
     audio/audio_silence_detector.cc
     audio/audio_silence_detector.h
     audio/audio_volume_filter.cc
-    audio/audio_volume_filter.h)
+    audio/audio_volume_filter.h
+    audio/audio_volume_filter_win.cc
+    audio/audio_volume_filter_win.h)
 
-if (WIN32)
-    list(APPEND SOURCE_BASE_AUDIO
-        audio/audio_capturer_win.cc
-        audio/audio_capturer_win.h
-        audio/audio_output_win.cc
-        audio/audio_output_win.h
-        audio/audio_volume_filter_win.cc
-        audio/audio_volume_filter_win.h)
-
-    list(APPEND SOURCE_BASE_AUDIO_WIN
-        audio/win/audio_util_win.cc
-        audio/win/audio_util_win.h
-        audio/win/default_audio_device_change_detector.cc
-        audio/win/default_audio_device_change_detector.h
-        audio/win/scoped_mmcss_registration.cc
-        audio/win/scoped_mmcss_registration.h)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE_AUDIO
-        audio/audio_capturer_linux.cc
-        audio/audio_capturer_linux.h
-        audio/audio_output_pulse.cc
-        audio/audio_output_pulse.h)
-
-    list(APPEND SOURCE_BASE_AUDIO_LINUX
-        audio/linux/late_binding_symbol_table.cc
-        audio/linux/late_binding_symbol_table.h
-        audio/linux/pulseaudio_symbol_table.cc
-        audio/linux/pulseaudio_symbol_table.h)
-endif()
-
-if (APPLE)
-    list(APPEND SOURCE_BASE_AUDIO
-        audio/audio_output_mac.cc
-        audio/audio_output_mac.h)
-endif()
+list(APPEND SOURCE_BASE_AUDIO_WIN
+    audio/win/audio_util_win.cc
+    audio/win/audio_util_win.h
+    audio/win/default_audio_device_change_detector.cc
+    audio/win/default_audio_device_change_detector.h
+    audio/win/scoped_mmcss_registration.cc
+    audio/win/scoped_mmcss_registration.h)
 
 list(APPEND SOURCE_BASE_CODEC
     codec/audio_bus.cc
@@ -221,6 +179,7 @@ list(APPEND SOURCE_BASE_CRYPTO
     crypto/openssl_util.cc
     crypto/openssl_util.h
     crypto/os_crypt.h
+    crypto/os_crypt_win.cc
     crypto/password_generator.cc
     crypto/password_generator.h
     crypto/password_hash.cc
@@ -231,18 +190,6 @@ list(APPEND SOURCE_BASE_CRYPTO
     crypto/secure_memory.h
     crypto/srp_math.cc
     crypto/srp_math.h)
-
-if (WIN32)
-    list(APPEND SOURCE_BASE_CRYPTO crypto/os_crypt_win.cc)
-endif()
-
-if (APPLE)
-    list(APPEND SOURCE_BASE_CRYPTO crypto/os_crypt_mac.mm)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE_CRYPTO crypto/os_crypt_linux.cc)
-endif()
 
 list(APPEND SOURCE_BASE_CRYPTO_TESTS
     crypto/big_num_unittest.cc
@@ -261,8 +208,12 @@ list(APPEND SOURCE_BASE_DESKTOP
     desktop/capture_scheduler.h
     desktop/desktop_environment.cc
     desktop/desktop_environment.h
+    desktop/desktop_environment_win.cc
+    desktop/desktop_environment_win.h
     desktop/desktop_resizer.cc
     desktop/desktop_resizer.h
+    desktop/desktop_resizer_win.cc
+    desktop/desktop_resizer_win.h
     desktop/diff_block_32bpp_c.cc
     desktop/diff_block_32bpp_c.h
     desktop/diff_block_32bpp_sse2.cc
@@ -273,6 +224,8 @@ list(APPEND SOURCE_BASE_DESKTOP
     desktop/frame.h
     desktop/frame_aligned.cc
     desktop/frame_aligned.h
+    desktop/frame_dib.cc
+    desktop/frame_dib.h
     desktop/frame_rotation.cc
     desktop/frame_rotation.h
     desktop/mouse_cursor.cc
@@ -281,93 +234,51 @@ list(APPEND SOURCE_BASE_DESKTOP
     desktop/power_save_blocker.h
     desktop/screen_capturer.cc
     desktop/screen_capturer.h
+    desktop/screen_capturer_dxgi.cc
+    desktop/screen_capturer_dxgi.h
+    desktop/screen_capturer_gdi.cc
+    desktop/screen_capturer_gdi.h
     desktop/screen_capturer_helper.cc
-    desktop/screen_capturer_helper.h)
-
-if (WIN32)
-    list(APPEND SOURCE_BASE_DESKTOP
-        desktop/desktop_environment_win.cc
-        desktop/desktop_environment_win.h
-        desktop/desktop_resizer_win.cc
-        desktop/desktop_resizer_win.h
-        desktop/frame_dib.cc
-        desktop/frame_dib.h
-        desktop/screen_capturer_dxgi.cc
-        desktop/screen_capturer_dxgi.h
-        desktop/screen_capturer_gdi.cc
-        desktop/screen_capturer_gdi.h
-        desktop/screen_capturer_win.cc
-        desktop/screen_capturer_win.h)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE_DESKTOP
-        desktop/desktop_environment_linux.cc
-        desktop/desktop_environment_linux.h
-        desktop/desktop_resizer_x11.cc
-        desktop/desktop_resizer_x11.h
-        desktop/screen_capturer_x11.cc
-        desktop/screen_capturer_x11.h)
-endif()
-
-if (APPLE)
-    list(APPEND SOURCE_BASE_DESKTOP
-        desktop/desktop_environment_mac.mm
-        desktop/desktop_environment_mac.h
-        desktop/screen_capturer_mac.mm
-        desktop/screen_capturer_mac.h)
-endif()
+    desktop/screen_capturer_helper.h
+    desktop/screen_capturer_win.cc
+    desktop/screen_capturer_win.h)
 
 list(APPEND SOURCE_BASE_DESKTOP_TESTS
     desktop/diff_block_32bpp_c_unittest.cc
     desktop/diff_block_32bpp_sse2_unittest.cc
     desktop/frame_unittest.cc)
 
-if (WIN32)
-    list(APPEND SOURCE_BASE_DESKTOP_WIN
-        desktop/win/d3d_device.cc
-        desktop/win/d3d_device.h
-        desktop/win/dxgi_adapter_duplicator.cc
-        desktop/win/dxgi_adapter_duplicator.h
-        desktop/win/dxgi_context.cc
-        desktop/win/dxgi_context.h
-        desktop/win/dxgi_cursor.cc
-        desktop/win/dxgi_cursor.h
-        desktop/win/dxgi_duplicator_controller.cc
-        desktop/win/dxgi_duplicator_controller.h
-        desktop/win/dxgi_frame.cc
-        desktop/win/dxgi_frame.h
-        desktop/win/dxgi_output_duplicator.cc
-        desktop/win/dxgi_output_duplicator.h
-        desktop/win/dxgi_texture.cc
-        desktop/win/dxgi_texture.h
-        desktop/win/dxgi_texture_mapping.cc
-        desktop/win/dxgi_texture_mapping.h
-        desktop/win/dxgi_texture_staging.cc
-        desktop/win/dxgi_texture_staging.h
-        desktop/win/screen_capture_utils.cc
-        desktop/win/screen_capture_utils.h
-        desktop/win/swdevice_defines.h
-        desktop/win/virtual_display.cc
-        desktop/win/virtual_display.h)
+list(APPEND SOURCE_BASE_DESKTOP_WIN
+    desktop/win/d3d_device.cc
+    desktop/win/d3d_device.h
+    desktop/win/dxgi_adapter_duplicator.cc
+    desktop/win/dxgi_adapter_duplicator.h
+    desktop/win/dxgi_context.cc
+    desktop/win/dxgi_context.h
+    desktop/win/dxgi_cursor.cc
+    desktop/win/dxgi_cursor.h
+    desktop/win/dxgi_duplicator_controller.cc
+    desktop/win/dxgi_duplicator_controller.h
+    desktop/win/dxgi_frame.cc
+    desktop/win/dxgi_frame.h
+    desktop/win/dxgi_output_duplicator.cc
+    desktop/win/dxgi_output_duplicator.h
+    desktop/win/dxgi_texture.cc
+    desktop/win/dxgi_texture.h
+    desktop/win/dxgi_texture_mapping.cc
+    desktop/win/dxgi_texture_mapping.h
+    desktop/win/dxgi_texture_staging.cc
+    desktop/win/dxgi_texture_staging.h
+    desktop/win/screen_capture_utils.cc
+    desktop/win/screen_capture_utils.h
+    desktop/win/swdevice_defines.h
+    desktop/win/virtual_display.cc
+    desktop/win/virtual_display.h)
 
-    list(APPEND SOURCE_BASE_DESKTOP_WIN_TESTS
-        desktop/win/cursor_unittest.cc
-        desktop/win/cursor_unittest_resources.h
-        desktop/win/cursor_unittest_resources.rc)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE_DESKTOP_X11
-        desktop/x11/shared_x_display.cc
-        desktop/x11/shared_x_display.h
-        desktop/x11/x_atom_cache.cc
-        desktop/x11/x_atom_cache.h
-        desktop/x11/x_error_trap.cc
-        desktop/x11/x_error_trap.h
-        desktop/x11/x_server_pixel_buffer.cc
-        desktop/x11/x_server_pixel_buffer.h)
-endif()
+list(APPEND SOURCE_BASE_DESKTOP_WIN_TESTS
+    desktop/win/cursor_unittest.cc
+    desktop/win/cursor_unittest_resources.h
+    desktop/win/cursor_unittest_resources.rc)
 
 list(APPEND SOURCE_BASE_FILES
     files/file_enumerator.cc
@@ -375,26 +286,11 @@ list(APPEND SOURCE_BASE_FILES
     files/file_util.cc
     files/file_util.h)
 
-if (UNIX)
-    list(APPEND SOURCE_BASE_FILES
-        files/file_descriptor_watcher_posix.cc
-        files/file_descriptor_watcher_posix.h)
-endif()
-
 list(APPEND SOURCE_BASE_IPC
     ipc/ipc_channel.cc
     ipc/ipc_channel.h
     ipc/ipc_server.cc
     ipc/ipc_server.h)
-
-if (APPLE)
-    list(APPEND SOURCE_BASE_MAC
-        mac/app_nap_blocker.mm
-        mac/app_nap_blocker.h
-        mac/nsstring_conversions.mm
-        mac/nsstring_conversions.h
-        mac/scoped_cftyperef.h)
-endif()
 
 list(APPEND SOURCE_BASE_NET
     net/adapter_enumerator.cc
@@ -403,10 +299,18 @@ list(APPEND SOURCE_BASE_NET
     net/anti_replay_window.h
     net/address.cc
     net/address.h
+    net/connect_enumerator.cc
+    net/connect_enumerator.h
     net/curl_util.cc
     net/curl_util.h
+    net/firewall_manager.cc
+    net/firewall_manager.h
     net/net_utils.cc
     net/net_utils.h
+    net/open_files_enumerator.cc
+    net/open_files_enumerator.h
+    net/route_enumerator.cc
+    net/route_enumerator.h
     net/tcp_channel.cc
     net/tcp_channel.h
     net/tcp_channel_legacy.cc
@@ -419,18 +323,6 @@ list(APPEND SOURCE_BASE_NET
     net/tcp_server_legacy.h
     net/udp_channel.cc
     net/udp_channel.h)
-
-if (WIN32)
-    list(APPEND SOURCE_BASE_NET
-        net/connect_enumerator.cc
-        net/connect_enumerator.h
-        net/firewall_manager.cc
-        net/firewall_manager.h
-        net/open_files_enumerator.cc
-        net/open_files_enumerator.h
-        net/route_enumerator.cc
-        net/route_enumerator.h)
-endif()
 
 list(APPEND SOURCE_BASE_NET_TESTS
     net/address_unittest.cc
@@ -459,160 +351,110 @@ list(APPEND SOURCE_BASE_PEER
     peer/user_list.h
     peer/user_list_base.h)
 
-if (UNIX)
-    list(APPEND SOURCE_BASE_POSIX
-        posix/eintr_wrapper.h)
-endif()
+list(APPEND SOURCE_BASE_WIN
+    win/battery_enumerator.cc
+    win/battery_enumerator.h
+    win/desktop.cc
+    win/desktop.h
+    win/device.cc
+    win/device.h
+    win/device_enumerator.cc
+    win/device_enumerator.h
+    win/event_enumerator.cc
+    win/event_enumerator.h
+    win/file_version_info.cc
+    win/file_version_info.h
+    win/message_window.cc
+    win/message_window.h
+    win/mini_dump_writer.cc
+    win/mini_dump_writer.h
+    win/net_share_enumerator.cc
+    win/net_share_enumerator.h
+    win/power_info.cc
+    win/power_info.h
+    win/printer_enumerator.cc
+    win/printer_enumerator.h
+    win/process_util.cc
+    win/process_util.h
+    win/registry.cc
+    win/registry.h
+    win/resource_util.cc
+    win/resource_util.h
+    win/safe_mode_util.cc
+    win/safe_mode_util.h
+    win/scoped_clipboard.cc
+    win/scoped_clipboard.h
+    win/scoped_co_mem.h
+    win/scoped_com_initializer.cc
+    win/scoped_com_initializer.h
+    win/scoped_device_info.h
+    win/scoped_gdi_object.h
+    win/scoped_hdc.h
+    win/scoped_hglobal.h
+    win/scoped_impersonator.cc
+    win/scoped_impersonator.h
+    win/scoped_local.h
+    win/scoped_object.h
+    win/scoped_select_object.h
+    win/scoped_thread_desktop.cc
+    win/scoped_thread_desktop.h
+    win/scoped_user_object.h
+    win/scoped_wts_memory.h
+    win/security_helpers.cc
+    win/security_helpers.h
+    win/service_enumerator.cc
+    win/service_enumerator.h
+    win/session_enumerator.cc
+    win/session_enumerator.h
+    win/session_info.cc
+    win/session_info.h
+    win/user_enumerator.cc
+    win/user_enumerator.h
+    win/window_station.cc
+    win/window_station.h
+    win/windows_version.cc
+    win/windows_version.h)
 
-if (WIN32)
-    list(APPEND SOURCE_BASE_WIN
-        win/battery_enumerator.cc
-        win/battery_enumerator.h
-        win/desktop.cc
-        win/desktop.h
-        win/device.cc
-        win/device.h
-        win/device_enumerator.cc
-        win/device_enumerator.h
-        win/event_enumerator.cc
-        win/event_enumerator.h
-        win/file_version_info.cc
-        win/file_version_info.h
-        win/message_window.cc
-        win/message_window.h
-        win/mini_dump_writer.cc
-        win/mini_dump_writer.h
-        win/net_share_enumerator.cc
-        win/net_share_enumerator.h
-        win/power_info.cc
-        win/power_info.h
-        win/printer_enumerator.cc
-        win/printer_enumerator.h
-        win/process_util.cc
-        win/process_util.h
-        win/registry.cc
-        win/registry.h
-        win/resource_util.cc
-        win/resource_util.h
-        win/safe_mode_util.cc
-        win/safe_mode_util.h
-        win/scoped_clipboard.cc
-        win/scoped_clipboard.h
-        win/scoped_co_mem.h
-        win/scoped_com_initializer.cc
-        win/scoped_com_initializer.h
-        win/scoped_device_info.h
-        win/scoped_gdi_object.h
-        win/scoped_hdc.h
-        win/scoped_hglobal.h
-        win/scoped_impersonator.cc
-        win/scoped_impersonator.h
-        win/scoped_local.h
-        win/scoped_object.h
-        win/scoped_select_object.h
-        win/scoped_thread_desktop.cc
-        win/scoped_thread_desktop.h
-        win/scoped_user_object.h
-        win/scoped_wts_memory.h
-        win/security_helpers.cc
-        win/security_helpers.h
-        win/service_enumerator.cc
-        win/service_enumerator.h
-        win/session_enumerator.cc
-        win/session_enumerator.h
-        win/session_info.cc
-        win/session_info.h
-        win/user_enumerator.cc
-        win/user_enumerator.h
-        win/window_station.cc
-        win/window_station.h
-        win/windows_version.cc
-        win/windows_version.h)
-
-    list(APPEND SOURCE_BASE_WIN_TESTS
-        win/registry_unittest.cc
-        win/scoped_object_unittest.cc)
-endif()
-
-if (LINUX)
-    list(APPEND SOURCE_BASE_X11
-        x11/x11_headers.h
-        x11/x_server_clipboard.cc
-        x11/x_server_clipboard.h)
-endif()
+list(APPEND SOURCE_BASE_WIN_TESTS
+    win/registry_unittest.cc
+    win/scoped_object_unittest.cc)
 
 source_group("" FILES ${SOURCE_BASE} ${SOURCE_BASE_TESTS})
 source_group(audio FILES ${SOURCE_BASE_AUDIO})
+source_group(audio\\win FILES ${SOURCE_BASE_AUDIO_WIN})
 source_group(codec FILES ${SOURCE_BASE_CODEC} ${SOURCE_BASE_CODEC_TESTS})
 source_group(crypto FILES ${SOURCE_BASE_CRYPTO} ${SOURCE_BASE_CRYPTO_TESTS})
 source_group(desktop FILES ${SOURCE_BASE_DESKTOP} ${SOURCE_BASE_DESKTOP_TESTS})
+source_group(desktop\\win FILES ${SOURCE_BASE_DESKTOP_WIN} ${SOURCE_BASE_DESKTOP_WIN_TESTS})
 source_group(files FILES ${SOURCE_BASE_FILES})
 source_group(ipc FILES ${SOURCE_BASE_IPC})
 source_group(net FILES ${SOURCE_BASE_NET} ${SOURCE_BASE_NET_TESTS})
 source_group(peer FILES ${SOURCE_BASE_PEER})
-
-if (WIN32)
-    source_group(audio\\win FILES ${SOURCE_BASE_AUDIO_WIN})
-    source_group(desktop\\win FILES ${SOURCE_BASE_DESKTOP_WIN} ${SOURCE_BASE_DESKTOP_WIN_TESTS})
-    source_group(posix FILES ${SOURCE_BASE_POSIX})
-    source_group(win FILES ${SOURCE_BASE_WIN} ${SOURCE_BASE_WIN_TESTS})
-endif()
-
-if (LINUX)
-    source_group(audio\\linux FILES ${SOURCE_BASE_AUDIO_LINUX})
-    source_group(desktop\\x11 FILES ${SOURCE_BASE_DESKTOP_X11})
-    source_group(posix FILES ${SOURCE_BASE_POSIX})
-    source_group(x11 FILES ${SOURCE_BASE_X11})
-endif()
-
-if (APPLE)
-    source_group(mac FILES ${SOURCE_BASE_MAC})
-    source_group(desktop\\mac FILES ${SOURCE_BASE_DESKTOP_MAC})
-endif()
+source_group(win FILES ${SOURCE_BASE_WIN} ${SOURCE_BASE_WIN_TESTS})
 
 add_library(aspia_base STATIC
     ${SOURCE_BASE}
     ${SOURCE_BASE_AUDIO}
-    ${SOURCE_BASE_AUDIO_LINUX}
     ${SOURCE_BASE_AUDIO_WIN}
     ${SOURCE_BASE_CODEC}
     ${SOURCE_BASE_CRYPTO}
     ${SOURCE_BASE_DESKTOP}
-    ${SOURCE_BASE_DESKTOP_MAC}
     ${SOURCE_BASE_DESKTOP_WIN}
-    ${SOURCE_BASE_DESKTOP_X11}
     ${SOURCE_BASE_FILES}
     ${SOURCE_BASE_IPC}
-    ${SOURCE_BASE_MAC}
     ${SOURCE_BASE_NET}
     ${SOURCE_BASE_PEER}
-    ${SOURCE_BASE_POSIX}
-    ${SOURCE_BASE_WIN}
-    ${SOURCE_BASE_X11})
+    ${SOURCE_BASE_WIN})
 
 set_property(TARGET aspia_base PROPERTY AUTOMOC ON)
 set_property(TARGET aspia_base PROPERTY AUTOUIC ON)
 set_property(TARGET aspia_base PROPERTY AUTORCC ON)
 qt_import_plugins(aspia_base INCLUDE "" EXCLUDE "" INCLUDE_BY_TYPE "" EXCLUDE_BY_TYPE imageformats)
 
-if (LINUX)
-    set(BASE_PLATFORM_LIBS ${X11_LIB} ${XFIXES_LIB} stdc++fs xdg_user_dirs)
-endif()
-
 target_link_libraries(aspia_base PRIVATE aspia_proto
-    ${THIRD_PARTY_LIBS} ${BASE_PLATFORM_LIBS} ${QT_COMMON_LIBS} ${QT_PLATFORM_LIBS})
+    ${THIRD_PARTY_LIBS} ${QT_COMMON_LIBS} ${QT_PLATFORM_LIBS})
 
-if (WIN32)
-    set(BASE_TESTS_PLATFORM_LIBS avrt crypt32 dbghelp iphlpapi ws2_32)
-endif()
-
-if (LINUX)
-    set(BASE_TESTS_PLATFORM_LIBS stdc++fs)
-endif()
-
-if (APPLE)
-    set(BASE_TESTS_PLATFORM_LIBS ${FOUNDATION_LIB})
-endif()
+set(BASE_TESTS_PLATFORM_LIBS avrt crypt32 dbghelp iphlpapi ws2_32)
 
 add_executable(aspia_base_tests
     ${SOURCE_BASE_TESTS}

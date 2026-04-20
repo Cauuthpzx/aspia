@@ -93,36 +93,14 @@ list(APPEND SOURCE_CONSOLE
 source_group("" FILES ${SOURCE_CONSOLE})
 source_group(moc FILES ${SOURCE_CONSOLE_MOC})
 
-if (WIN32)
-    set(CONSOLE_PLATFORM_LIBS
-        avrt crypt32 dbghelp dwmapi imm32 iphlpapi netapi32 shlwapi userenv uxtheme version
-        winmm wtsapi32)
-endif()
+set(CONSOLE_PLATFORM_LIBS
+    avrt crypt32 dbghelp dwmapi imm32 iphlpapi netapi32 shlwapi userenv uxtheme version
+    winmm wtsapi32)
 
-if (APPLE)
-    set(CONSOLE_PLATFORM_LIBS ${COREAUDIO_LIB} ${AUDIOTOOLBOX_LIB} portaudio)
-    set(aspia_console_ICON ${PROJECT_SOURCE_DIR}/source/common/resources/aspia-console.icns)
-    set(aspia_console_PLIST ${PROJECT_SOURCE_DIR}/source/console/Info.plist)
+add_executable(aspia_console ${SOURCE_CONSOLE})
 
-    set_source_files_properties(${aspia_console_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-endif()
-
-if (LINUX)
-    set(CONSOLE_PLATFORM_LIBS stdc++fs ${XFIXES_LIB})
-endif()
-
-add_executable(aspia_console MACOSX_BUNDLE ${aspia_console_ICON} ${SOURCE_CONSOLE})
-
-if (APPLE)
-    set_target_properties(aspia_console PROPERTIES OUTPUT_NAME "Aspia Console")
-    set_target_properties(aspia_console PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${aspia_console_PLIST})
-    set_target_properties(aspia_console PROPERTIES MACOSX_BUNDLE_ICONFILE ${aspia_console_ICON})
-endif()
-
-if (WIN32)
-    set_target_properties(aspia_console PROPERTIES WIN32_EXECUTABLE TRUE)
-    set_target_properties(aspia_console PROPERTIES LINK_FLAGS "/MANIFEST:NO")
-endif()
+set_target_properties(aspia_console PROPERTIES WIN32_EXECUTABLE TRUE)
+set_target_properties(aspia_console PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 
 target_link_libraries(aspia_console
     aspia_base

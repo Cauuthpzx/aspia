@@ -31,92 +31,7 @@
           "type": "STRING",
           "value": "$env{VCPKG_TRIPLET}"
         }
-      }
-    },
-    {
-      "name": "ci",
-      "inherits": [
-        "base"
-      ]
-    },
-    {
-      "name": "local-linux-x64",
-      "inherits": [
-        "base"
-      ],
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-linux"
       },
-      "environment": {
-        "VCPKG_TRIPLET": "x64-linux"
-      }
-    },
-    {
-      "name": "local-linux-arm64",
-      "inherits": [
-        "base"
-      ],
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "arm64-linux"
-      },
-      "environment": {
-        "VCPKG_TRIPLET": "arm64-linux"
-      }
-    },
-    {
-      "name": "local-mac-arm64",
-      "inherits": [
-        "base"
-      ],
-      "architecture": {
-        "value": "arm64",
-        "strategy": "external"
-      },
-      "vendor": {
-        "microsoft.com/VisualStudioSettings/CMake/1.0": {
-          "hostOS": [
-            "macOS"
-          ]
-        }
-      },
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "arm64-osx",
-        "CMAKE_PROGRAM_PATH": "/opt/homebrew/bin"
-      },
-      "environment": {
-        "VCPKG_TRIPLET": "arm64-osx"
-      }
-    },
-    {
-      "name": "local-mac-x64",
-      "inherits": [
-        "base"
-      ],
-      "architecture": {
-        "value": "x86_64",
-        "strategy": "external"
-      },
-      "vendor": {
-        "microsoft.com/VisualStudioSettings/CMake/1.0": {
-          "hostOS": [
-            "macOS"
-          ]
-        }
-      },
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-osx",
-        "CMAKE_PROGRAM_PATH": "/opt/homebrew/bin"
-      },
-      "environment": {
-        "VCPKG_TRIPLET": "x64-osx"
-      }
-    },
-    {
-      "name": "local-win-base",
-      "hidden": true,
-      "inherits": [
-        "base"
-      ],
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
           "hostOS": [
@@ -126,9 +41,15 @@
       }
     },
     {
+      "name": "ci",
+      "inherits": [
+        "base"
+      ]
+    },
+    {
       "name": "local-win-x86",
       "inherits": [
-        "local-win-base"
+        "base"
       ],
       "architecture": {
         "value": "x86",
@@ -145,7 +66,7 @@
     {
       "name": "local-win-arm64",
       "inherits": [
-        "local-win-base"
+        "base"
       ],
       "architecture": {
         "value": "arm64",
@@ -162,7 +83,7 @@
     {
       "name": "local-win-x64",
       "inherits": [
-        "local-win-base"
+        "base"
       ],
       "architecture": {
         "value": "x64",
@@ -191,12 +112,12 @@
   ],
   "testPresets": [
     {
-      "name": "ci-release", 
+      "name": "ci-release",
       "configurePreset": "ci",
       "configuration": "Release"
     },
     {
-      "name": "ci-debug", 
+      "name": "ci-debug",
       "configurePreset": "ci",
       "configuration": "Debug"
     }

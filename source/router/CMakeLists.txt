@@ -43,30 +43,16 @@ list(APPEND SOURCE_ROUTER
     user_list.cc
     user_list.h)
 
-if (WIN32)
-    list(APPEND SOURCE_ROUTER_WIN win/router.rc)
-endif()
+list(APPEND SOURCE_ROUTER_WIN win/router.rc)
 
 source_group("" FILES ${SOURCE_ROUTER})
+source_group(win FILES ${SOURCE_ROUTER_WIN})
 
-if (WIN32)
-    source_group(win FILES ${SOURCE_ROUTER_WIN})
-    set(ROUTER_PLATFORM_LIBS avrt comsupp crypt32 dbghelp netapi32 version)
-endif()
-
-if (LINUX)
-    set(ROUTER_PLATFORM_LIBS stdc++fs)
-endif()
-
-if (APPLE)
-    set(ROUTER_PLATFORM_LIBS ${FOUNDATION_LIB})
-endif()
+set(ROUTER_PLATFORM_LIBS avrt comsupp crypt32 dbghelp netapi32 version)
 
 add_executable(aspia_router ${SOURCE_ROUTER} ${SOURCE_ROUTER_WIN})
 
-if (WIN32)
-    set_target_properties(aspia_router PROPERTIES LINK_FLAGS "/MANIFEST:NO")
-endif()
+set_target_properties(aspia_router PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 
 target_link_libraries(aspia_router
     aspia_base
