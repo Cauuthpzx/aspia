@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 class SysInfoEnvVars
@@ -52,6 +54,7 @@ public:
     void move(int x, int y, int width, int height);
 
     void setEnvVars(const std::vector<EnvVar>& env_vars);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

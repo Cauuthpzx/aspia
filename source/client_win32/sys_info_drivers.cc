@@ -20,9 +20,51 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
+
+const wchar_t* driverStatusToString(proto::system_info::Drivers::Driver::Status s)
+{
+    using S = proto::system_info::Drivers::Driver::Status;
+    switch (s)
+    {
+        case S::STATUS_CONTINUE_PENDING: return L"Continue Pending";
+        case S::STATUS_PAUSE_PENDING:    return L"Pause Pending";
+        case S::STATUS_PAUSED:           return L"Paused";
+        case S::STATUS_RUNNING:          return L"Running";
+        case S::STATUS_START_PENDING:    return L"Start Pending";
+        case S::STATUS_STOP_PENDING:     return L"Stop Pending";
+        case S::STATUS_STOPPED:          return L"Stopped";
+        default:                         return L"Unknown";
+    }
+}
+
+const wchar_t* driverStartupToString(proto::system_info::Drivers::Driver::StartupType t)
+{
+    using T = proto::system_info::Drivers::Driver::StartupType;
+    switch (t)
+    {
+        case T::STARTUP_TYPE_AUTO_START:   return L"Auto Start";
+        case T::STARTUP_TYPE_DEMAND_START: return L"Demand Start";
+        case T::STARTUP_TYPE_DISABLED:     return L"Disabled";
+        case T::STARTUP_TYPE_BOOT_START:   return L"Boot Start";
+        case T::STARTUP_TYPE_SYSTEM_START: return L"System Start";
+        default:                           return L"Unknown";
+    }
+}
 
 // Control IDs - matches IDC_SYSINFO_DRIVERS_LIST.
 constexpr int kIdList = 5000;
@@ -207,6 +249,24 @@ void SysInfoDrivers::setDrivers(const std::vector<Driver>& drivers)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoDrivers::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_drivers()) return;
+    std::vector<Driver> drvs;
+    for (const auto& d : si.drivers().driver())
+    {
+        Driver drv;
+        drv.displayName    = toWide(d.display_name());
+        drv.name           = toWide(d.name());
+        drv.description    = toWide(d.description());
+        drv.status         = driverStatusToString(d.status());
+        drv.startupType    = driverStartupToString(d.startup_type());
+        drv.executableFile = toWide(d.binary_path());
+        drvs.push_back(std::move(drv));
+    }
+    setDrivers(drvs);
 }
 
 }  // namespace aspia::client_win32

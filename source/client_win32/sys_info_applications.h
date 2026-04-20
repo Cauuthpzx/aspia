@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 class SysInfoApplications
@@ -55,6 +57,7 @@ public:
     void move(int x, int y, int width, int height);
 
     void setApplications(const std::vector<Application>& apps);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

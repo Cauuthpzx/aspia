@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_devices.h). Reserved range
@@ -207,6 +219,26 @@ void SysInfoDevices::setDevices(const std::vector<Device>& devices)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoDevices::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_windows_devices()) return;
+    std::vector<Device> devs;
+    for (const auto& d : si.windows_devices().device())
+    {
+        Device dev;
+        // Use friendly_name if available, fall back to description
+        dev.deviceName    = d.friendly_name().empty()
+                                ? toWide(d.description())
+                                : toWide(d.friendly_name());
+        dev.driverVersion = toWide(d.driver_version());
+        dev.driverDate    = toWide(d.driver_date());
+        dev.driverVendor  = toWide(d.driver_vendor());
+        dev.deviceId      = toWide(d.device_id());
+        devs.push_back(std::move(dev));
+    }
+    setDevices(devs);
 }
 
 }  // namespace aspia::client_win32

@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_applications.h). Reserved range
@@ -207,6 +219,23 @@ void SysInfoApplications::setApplications(const std::vector<Application>& apps)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoApplications::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_applications()) return;
+    std::vector<Application> apps;
+    for (const auto& a : si.applications().application())
+    {
+        Application app;
+        app.name            = toWide(a.name());
+        app.version         = toWide(a.version());
+        app.publisher       = toWide(a.publisher());
+        app.installDate     = toWide(a.install_date());
+        app.installLocation = toWide(a.install_location());
+        apps.push_back(std::move(app));
+    }
+    setApplications(apps);
 }
 
 }  // namespace aspia::client_win32

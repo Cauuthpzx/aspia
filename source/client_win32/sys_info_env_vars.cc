@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_env_vars.h). Reserved range
@@ -201,6 +213,20 @@ void SysInfoEnvVars::setEnvVars(const std::vector<EnvVar>& env_vars)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoEnvVars::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_env_vars()) return;
+    std::vector<EnvVar> vars;
+    for (const auto& v : si.env_vars().variable())
+    {
+        EnvVar ev;
+        ev.name  = toWide(v.name());
+        ev.value = toWide(v.value());
+        vars.push_back(std::move(ev));
+    }
+    setEnvVars(vars);
 }
 
 }  // namespace aspia::client_win32

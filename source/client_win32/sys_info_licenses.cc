@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_licenses.h). Reserved range
@@ -205,6 +217,40 @@ void SysInfoLicenses::setLicenses(const std::vector<License>& licenses)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoLicenses::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_licenses()) return;
+    std::vector<License> lics;
+    for (const auto& l : si.licenses().license())
+    {
+        License lic;
+        lic.productName = toWide(l.product_name());
+
+        using FT = proto::system_info::Licenses::License::Field::Type;
+        for (const auto& f : l.field())
+        {
+            switch (f.type())
+            {
+                case FT::TYPE_PRODUCT_KEY:
+                    lic.productKey = toWide(f.value());
+                    break;
+                case FT::TYPE_PRODUCT_ID:
+                    if (lic.serialNumber.empty())
+                        lic.serialNumber = toWide(f.value());
+                    break;
+                case FT::TYPE_LICENSE_VERSION:
+                    if (lic.installDate.empty())
+                        lic.installDate = toWide(f.value());
+                    break;
+                default:
+                    break;
+            }
+        }
+        lics.push_back(std::move(lic));
+    }
+    setLicenses(lics);
 }
 
 }  // namespace aspia::client_win32

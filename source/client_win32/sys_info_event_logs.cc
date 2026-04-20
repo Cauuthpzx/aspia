@@ -19,10 +19,55 @@
 #include "client_win32/sys_info_event_logs.h"
 
 #include <commctrl.h>
+#include <time.h>
+
+#include "proto/system_info.h"
 
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
+
+std::wstring formatTimestamp(int64_t t)
+{
+    if (t == 0) return {};
+    time_t ts = static_cast<time_t>(t);
+    struct tm tm_val = {};
+#if defined(_WIN32)
+    localtime_s(&tm_val, &ts);
+#else
+    localtime_r(&ts, &tm_val);
+#endif
+    wchar_t buf[32];
+    swprintf(buf, 32, L"%04d-%02d-%02d %02d:%02d:%02d",
+             tm_val.tm_year + 1900, tm_val.tm_mon + 1, tm_val.tm_mday,
+             tm_val.tm_hour, tm_val.tm_min, tm_val.tm_sec);
+    return buf;
+}
+
+const wchar_t* eventLevelToString(proto::system_info::EventLogs::Event::Level lvl)
+{
+    using L = proto::system_info::EventLogs::Event::Level;
+    switch (lvl)
+    {
+        case L::LEVEL_SUCCESS:       return L"Success";
+        case L::LEVEL_INFORMATION:   return L"Information";
+        case L::LEVEL_WARNING:       return L"Warning";
+        case L::LEVEL_ERROR:         return L"Error";
+        case L::LEVEL_AUDIT_SUCCESS: return L"Audit Success";
+        case L::LEVEL_AUDIT_FAILURE: return L"Audit Failure";
+        default:                     return L"Unknown";
+    }
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_event_logs.h). Reserved range
@@ -270,6 +315,28 @@ std::wstring SysInfoEventLogs::getSelectedLog() const
     SendMessageW(combo_, CB_GETLBTEXT, index,
                  reinterpret_cast<LPARAM>(result.data()));
     return result;
+}
+
+void SysInfoEventLogs::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_event_logs()) return;
+    std::vector<EventEntry> entries;
+    for (const auto& e : si.event_logs().event())
+    {
+        EventEntry entry;
+        entry.time        = formatTimestamp(e.time());
+        entry.level       = eventLevelToString(e.level());
+        entry.category    = toWide(e.category());
+        entry.source      = toWide(e.source());
+        entry.description = toWide(e.description());
+
+        wchar_t idBuf[16];
+        swprintf(idBuf, 16, L"%u", e.event_id());
+        entry.eventId = idBuf;
+
+        entries.push_back(std::move(entry));
+    }
+    setEvents(entries);
 }
 
 }  // namespace aspia::client_win32
