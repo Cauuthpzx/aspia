@@ -29,6 +29,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     about_dialog.h
     auth_dialog.cc
     auth_dialog.h
+    chat_session_adapter.cc
+    chat_session_adapter.h
     chat_session_window.cc
     chat_session_window.h
     console_address_book_dialog.cc
@@ -47,6 +49,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     console_update_settings_dialog.h
     desktop_config_dialog.cc
     desktop_config_dialog.h
+    desktop_session_adapter.cc
+    desktop_session_adapter.h
     desktop_session_window.cc
     desktop_session_window.h
     desktop_toolbar.cc
@@ -60,6 +64,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     file_remove_dialog.h
     file_transfer_dialog.cc
     file_transfer_dialog.h
+    file_transfer_session_adapter.cc
+    file_transfer_session_adapter.h
     file_transfer_session_window.cc
     file_transfer_session_window.h
     host_change_password_dialog.cc
@@ -145,6 +151,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     sys_info_summary.h
     sys_info_video_adapters.cc
     sys_info_video_adapters.h
+    system_info_session_adapter.cc
+    system_info_session_adapter.h
     system_info_session_window.cc
     system_info_session_window.h
     task_manager_window.cc
@@ -158,9 +166,14 @@ add_executable(aspia_client_win32 ${SOURCE_CLIENT_WIN32})
 
 set_target_properties(aspia_client_win32 PROPERTIES
     WIN32_EXECUTABLE TRUE
-    LINK_FLAGS "/MANIFEST:NO")
+    LINK_FLAGS "/MANIFEST:NO"
+    AUTOMOC ON)
 
 target_link_libraries(aspia_client_win32 PRIVATE
+    aspia_client_core
+    aspia_proto
+    aspia_base
+    Qt6::Core
     comctl32
     dwmapi
     uxtheme

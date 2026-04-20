@@ -21,6 +21,7 @@
 #include "client_win32/auth_dialog.h"
 #include "client_win32/resource.h"
 
+#include <QCoreApplication>
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -188,6 +189,7 @@ void MainWindow::onCommand(int id)
 
 void MainWindow::onDestroy()
 {
+    QCoreApplication::quit();
 }
 
 }  // namespace aspia::client_win32

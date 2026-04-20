@@ -21,6 +21,8 @@
 
 #include <windows.h>
 
+class QCoreApplication;
+
 namespace aspia::client_win32 {
 
 class App
@@ -32,7 +34,7 @@ public:
     App(const App&) = delete;
     App& operator=(const App&) = delete;
 
-    int run(int showCmd);
+    int run(int argc, char** argv, int showCmd);
 
     HINSTANCE instance() const { return instance_; }
 

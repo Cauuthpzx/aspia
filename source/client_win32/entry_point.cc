@@ -22,6 +22,8 @@
 
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE /*prev*/, LPWSTR /*cmdLine*/, int showCmd)
 {
+    // QCoreApplication requires argc/argv; use the CRT globals available in
+    // all Windows executables (__argc / __argv from <stdlib.h>).
     aspia::client_win32::App app(instance);
-    return app.run(showCmd);
+    return app.run(__argc, __argv, showCmd);
 }

@@ -20,6 +20,7 @@
 
 #include "client_win32/main_window.h"
 
+#include <QCoreApplication>
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -36,25 +37,22 @@ App::App(HINSTANCE instance)
 
 App::~App() = default;
 
-int App::run(int showCmd)
+int App::run(int argc, char** argv, int showCmd)
 {
+    // QCoreApplication's event loop on Windows is a Win32 message pump.
+    // Win32 HWNDs created normally receive messages through it, and Qt
+    // objects (signals/slots, timers, network) also work correctly.
+    QCoreApplication qApp(argc, argv);
+
     MainWindow mainWindow(instance_);
     if (!mainWindow.create())
         return -1;
 
     mainWindow.show(showCmd);
 
-    MSG msg = {};
-    while (GetMessageW(&msg, nullptr, 0, 0) > 0)
-    {
-        if (!mainWindow.preTranslateMessage(&msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        }
-    }
-
-    return static_cast<int>(msg.wParam);
+    // MainWindow::onDestroy() calls QCoreApplication::quit() via
+    // PostQuitMessage(0), which causes qApp.exec() to return.
+    return qApp.exec();
 }
 
 }  // namespace aspia::client_win32
