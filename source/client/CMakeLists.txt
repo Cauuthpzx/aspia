@@ -287,6 +287,41 @@ set_property(TARGET aspia_client_core PROPERTY AUTOMOC ON)
 set_property(TARGET aspia_client_core PROPERTY AUTOUIC ON)
 set_property(TARGET aspia_client_core PROPERTY AUTORCC ON)
 
+# Lean session-only library used by aspia_client_win32.
+# Excludes Qt Widgets/Gui UI code, local_database (Qt::Sql), settings, and
+# console-only tools (router_manager, online_checker).
+add_library(aspia_client_session STATIC
+    client.cc
+    client.h
+    client_desktop.cc
+    client_desktop.h
+    client_file_transfer.cc
+    client_file_transfer.h
+    client_system_info.cc
+    client_system_info.h
+    client_text_chat.cc
+    client_text_chat.h
+    config.cc
+    config.h
+    config_factory.cc
+    config_factory.h
+    input_event_filter.cc
+    input_event_filter.h
+    router.cc
+    router.h
+    router_connection.cc
+    router_connection.h
+    session_state.cc
+    session_state.h)
+target_link_libraries(aspia_client_session PRIVATE
+    aspia_base
+    aspia_common
+    aspia_proto
+    Qt6::Core
+    Qt6::Network
+    ${THIRD_PARTY_LIBS})
+set_property(TARGET aspia_client_session PROPERTY AUTOMOC ON)
+
 set(CLIENT_PLATFORM_LIBS
     avrt crypt32 dbghelp dwmapi imm32 iphlpapi netapi32 shlwapi userenv uxtheme version
     winmm wtsapi32)

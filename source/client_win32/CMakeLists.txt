@@ -170,10 +170,11 @@ set_target_properties(aspia_client_win32 PROPERTIES
     AUTOMOC ON)
 
 target_link_libraries(aspia_client_win32 PRIVATE
-    aspia_client_core
+    aspia_client_session
     aspia_proto
     aspia_base
     Qt6::Core
+    Qt6::Network
     comctl32
     dwmapi
     uxtheme
