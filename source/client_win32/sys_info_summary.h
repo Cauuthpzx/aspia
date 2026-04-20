@@ -33,6 +33,8 @@
 #include <utility>
 #include <vector>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 class SysInfoSummary
@@ -61,6 +63,10 @@ public:
 
     // Removes all items from the tree.
     void clear();
+
+    // Populates the tree from a SystemInfo proto (aggregates Computer, OS,
+    // Motherboard, BIOS, Processor, Memory, and LogicalDrives sub-messages).
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

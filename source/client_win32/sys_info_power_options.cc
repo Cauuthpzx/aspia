@@ -199,4 +199,147 @@ void SysInfoPowerOptions::clear()
         TreeView_DeleteAllItems(tree_);
 }
 
+void SysInfoPowerOptions::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_power_options())
+        return;
+
+    clear();
+
+    const proto::system_info::PowerOptions& po = si.power_options();
+
+    // Determine power source string.
+    const wchar_t* powerSourceStr = L"Unknown";
+    switch (po.power_source())
+    {
+        case proto::system_info::PowerOptions::POWER_SOURCE_AC_LINE:
+            powerSourceStr = L"AC Line";
+            break;
+        case proto::system_info::PowerOptions::POWER_SOURCE_DC_BATTERY:
+            powerSourceStr = L"DC Battery";
+            break;
+        default:
+            break;
+    }
+
+    // Determine battery status string.
+    const wchar_t* batteryStatusStr = L"Unknown";
+    switch (po.battery_status())
+    {
+        case proto::system_info::PowerOptions::BATTERY_STATUS_HIGH:
+            batteryStatusStr = L"High";
+            break;
+        case proto::system_info::PowerOptions::BATTERY_STATUS_LOW:
+            batteryStatusStr = L"Low";
+            break;
+        case proto::system_info::PowerOptions::BATTERY_STATUS_CRITICAL:
+            batteryStatusStr = L"Critical";
+            break;
+        case proto::system_info::PowerOptions::BATTERY_STATUS_CHARGING:
+            batteryStatusStr = L"Charging";
+            break;
+        case proto::system_info::PowerOptions::BATTERY_STATUS_NO_BATTERY:
+            batteryStatusStr = L"No Battery";
+            break;
+        default:
+            break;
+    }
+
+    // Format battery life times.
+    std::wstring fullLifeTime;
+    std::wstring remainingLifeTime;
+
+    if (po.full_battery_life_time() != 0)
+    {
+        wchar_t buf[64];
+        uint64_t secs = po.full_battery_life_time();
+        swprintf(buf, 64, L"%llu:%02llu:%02llu",
+                 (unsigned long long)(secs / 3600),
+                 (unsigned long long)((secs % 3600) / 60),
+                 (unsigned long long)(secs % 60));
+        fullLifeTime = buf;
+    }
+
+    if (po.remaining_battery_life_time() != 0)
+    {
+        wchar_t buf[64];
+        uint64_t secs = po.remaining_battery_life_time();
+        swprintf(buf, 64, L"%llu:%02llu:%02llu",
+                 (unsigned long long)(secs / 3600),
+                 (unsigned long long)((secs % 3600) / 60),
+                 (unsigned long long)(secs % 60));
+        remainingLifeTime = buf;
+    }
+
+    wchar_t pctBuf[32] = {};
+    swprintf(pctBuf, 32, L"%u%%", po.battery_life_percent());
+
+    addSection(L"Power Options", {
+        { L"Power Source",            powerSourceStr },
+        { L"Battery Status",          batteryStatusStr },
+        { L"Battery Life",            pctBuf },
+        { L"Full Battery Life Time",  fullLifeTime },
+        { L"Remaining Battery Time",  remainingLifeTime },
+    });
+
+    // Add each battery.
+    for (int i = 0; i < po.battery_size(); ++i)
+    {
+        const proto::system_info::PowerOptions::Battery& b = po.battery(i);
+
+        Battery bat;
+        bat.vendor = toWide(b.manufacturer());
+        bat.model  = toWide(b.device_name());
+        bat.serial = toWide(b.serial_number());
+
+        wchar_t buf[64];
+        swprintf(buf, 64, L"%u mWh", b.design_capacity());
+        bat.design_capacity = buf;
+
+        swprintf(buf, 64, L"%u mWh", b.full_charged_capacity());
+        bat.full_charged_capacity = buf;
+
+        swprintf(buf, 64, L"%u mWh", b.current_capacity());
+        bat.current_capacity = buf;
+
+        // State is a bitmask.
+        std::wstring stateStr;
+        uint32_t state = b.state();
+        if (state & proto::system_info::PowerOptions::Battery::STATE_CHARGING)
+        {
+            if (!stateStr.empty()) stateStr.append(L", ");
+            stateStr.append(L"Charging");
+        }
+        if (state & proto::system_info::PowerOptions::Battery::STATE_DISCHARGING)
+        {
+            if (!stateStr.empty()) stateStr.append(L", ");
+            stateStr.append(L"Discharging");
+        }
+        if (state & proto::system_info::PowerOptions::Battery::STATE_CRITICAL)
+        {
+            if (!stateStr.empty()) stateStr.append(L", ");
+            stateStr.append(L"Critical");
+        }
+        if (state & proto::system_info::PowerOptions::Battery::STATE_POWER_ONLINE)
+        {
+            if (!stateStr.empty()) stateStr.append(L", ");
+            stateStr.append(L"Power Online");
+        }
+        if (stateStr.empty())
+            stateStr = L"Unknown";
+        bat.status = stateStr;
+
+        // Health = full_charged_capacity / design_capacity * 100 %
+        if (b.design_capacity() > 0)
+        {
+            double health = (static_cast<double>(b.full_charged_capacity()) /
+                             static_cast<double>(b.design_capacity())) * 100.0;
+            swprintf(buf, 64, L"%.1f%%", health);
+            bat.health = buf;
+        }
+
+        addBatteryEntry(bat);
+    }
+}
+
 }  // namespace aspia::client_win32
