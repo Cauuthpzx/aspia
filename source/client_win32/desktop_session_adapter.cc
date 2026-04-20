@@ -24,13 +24,12 @@
 #include "base/desktop/frame.h"
 #include "client/client_desktop.h"
 #include "client_win32/desktop_session_window.h"
+#include "client_win32/resource.h"
 #include "proto/desktop_control.h"
 #include "proto/desktop_cursor.h"
 #include "proto/desktop_input.h"
 #include "proto/desktop_power.h"
 #include "proto/desktop_screen.h"
-
-#include <QObject>
 
 #include <windows.h>
 
@@ -191,45 +190,32 @@ void DesktopSessionAdapter::wireWindowDelegate()
     d.onSettingsRequested = []() {};
 
     // Minimise / restore pause — forward to video pause.
+    // Win32 message callbacks and ClientDesktop both run on the main thread.
     d.onMinimized = [this](bool minimized)
     {
-        QMetaObject::invokeMethod(client_, "onVideoPauseChanged",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(bool, minimized));
+        client_->onVideoPauseChanged(minimized);
     };
 
     // Close — handled at the App level; nothing to do here.
     d.onClose = []() {};
 
     // Power control: the toolbar forwards an IDM_DT_* menu command id.
-    // Map known ids to proto::power::Control::Action values.
     d.onPowerControl = [this](int cmdId)
     {
         proto::power::Control_Action action = proto::power::Control::ACTION_UNKNOWN;
 
-        // IDM values are defined in resource.h; use their numeric range.
-        // The Win32 toolbar sends the raw command id; map them as agreed:
-        //   8101 = IDM_DT_POWER_SHUTDOWN
-        //   8102 = IDM_DT_POWER_REBOOT
-        //   8103 = IDM_DT_POWER_LOGOFF
-        //   8104 = IDM_DT_POWER_LOCK
-        //   8105 = IDM_DT_POWER_REBOOT_SAFE_MODE
         switch (cmdId)
         {
-            case 8101: action = proto::power::Control::ACTION_SHUTDOWN;         break;
-            case 8102: action = proto::power::Control::ACTION_REBOOT;           break;
-            case 8103: action = proto::power::Control::ACTION_LOGOFF;           break;
-            case 8104: action = proto::power::Control::ACTION_LOCK;             break;
-            case 8105: action = proto::power::Control::ACTION_REBOOT_SAFE_MODE; break;
-            default:   break;
+            case IDM_DT_SHUTDOWN:         action = proto::power::Control::ACTION_SHUTDOWN;         break;
+            case IDM_DT_REBOOT:           action = proto::power::Control::ACTION_REBOOT;           break;
+            case IDM_DT_REBOOT_SAFE_MODE: action = proto::power::Control::ACTION_REBOOT_SAFE_MODE; break;
+            case IDM_DT_LOGOFF:           action = proto::power::Control::ACTION_LOGOFF;           break;
+            case IDM_DT_LOCK:             action = proto::power::Control::ACTION_LOCK;             break;
+            default:                      break;
         }
 
         if (action != proto::power::Control::ACTION_UNKNOWN)
-        {
-            QMetaObject::invokeMethod(client_, "onPowerControl",
-                                      Qt::QueuedConnection,
-                                      Q_ARG(proto::power::Control_Action, action));
-        }
+            client_->onPowerControl(action);
     };
 
     // Secondary session requests — Phase 3.
@@ -240,17 +226,7 @@ void DesktopSessionAdapter::wireWindowDelegate()
     d.onSwitchSessionRequested = []() {};
     d.onStatisticsRequested    = []() {};
 
-    // -----------------------------------------------------------------------
-    // Key events
-    // -----------------------------------------------------------------------
-    // The Win32 window passes (WPARAM wVirtualKey, LPARAM lParam) from
-    // WM_KEYDOWN / WM_SYSKEYDOWN / WM_KEYUP / WM_SYSKEYUP.
-    // proto::input::KeyEvent uses a USB HID keycode.  We store the VK in the
-    // usb_keycode field for now (the host side already handles VK→USB mapping
-    // on Windows); flags carry PRESSED if it is a key-down event.
-    //
     // lParam bit 31: 0 = key pressed, 1 = key released.
-    // lParam bit 24: 1 = extended key (right-hand Ctrl/Alt, numpad /, Print Screen).
     d.onKeyEvent = [this](WPARAM wVirtualKey, LPARAM lParam)
     {
         proto::input::KeyEvent event;
@@ -268,27 +244,16 @@ void DesktopSessionAdapter::wireWindowDelegate()
             flags |= proto::input::KeyEvent::NUMLOCK;
 
         event.set_flags(flags);
-
-        QMetaObject::invokeMethod(client_, "onKeyEvent",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(proto::input::KeyEvent, event));
+        client_->onKeyEvent(event);
     };
 
-    // -----------------------------------------------------------------------
-    // Mouse events
-    // -----------------------------------------------------------------------
-    // The Win32 window passes (UINT msg, WPARAM wParam, LPARAM lParam) from
-    // the canvas WM_LBUTTONDOWN / WM_MOUSEMOVE / WM_MOUSEWHEEL etc.
     d.onMouseEvent = [this](UINT msg, WPARAM wp, LPARAM lp)
     {
         proto::input::MouseEvent event;
         event.set_x(GET_X_LPARAM(lp));
         event.set_y(GET_Y_LPARAM(lp));
         event.set_mask(mouseMaskFromWin32(msg, wp));
-
-        QMetaObject::invokeMethod(client_, "onMouseEvent",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(proto::input::MouseEvent, event));
+        client_->onMouseEvent(event);
     };
 
     window_->setDelegate(std::move(d));
