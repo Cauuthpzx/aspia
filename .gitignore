@@ -19,3 +19,4 @@
 # SW build dir and generated files
 .sw
 /*.lnk
+.claude/
