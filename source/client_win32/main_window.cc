@@ -18,6 +18,7 @@
 
 #include "client_win32/main_window.h"
 
+#include "client_win32/auth_dialog.h"
 #include "client_win32/resource.h"
 
 #include <commctrl.h>
@@ -50,11 +51,13 @@ bool MainWindow::create()
     if (!RegisterClassExW(&wc) && GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
         return false;
 
+    HMENU menu = LoadMenuW(instance_, MAKEINTRESOURCEW(IDR_MAIN_MENU));
+
     hwnd_ = CreateWindowExW(
         0, kClassName, L"Aspia Client",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, 960, 640,
-        nullptr, nullptr, instance_, this);
+        nullptr, menu, instance_, this);
 
     return hwnd_ != nullptr;
 }
@@ -163,6 +166,17 @@ void MainWindow::onCommand(int id)
 {
     switch (id)
     {
+        case ID_FILE_CONNECT:
+        {
+            AuthDialog dialog(instance_, hwnd_);
+            if (dialog.exec())
+            {
+                // TODO(phase2): wire up session launch once client core is
+                // ported to Win32 (see PHASE2_QT_REMOVAL_PLAN.md, WP5).
+            }
+            break;
+        }
+
         case ID_FILE_EXIT:
             DestroyWindow(hwnd_);
             break;

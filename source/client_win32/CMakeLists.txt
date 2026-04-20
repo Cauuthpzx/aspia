@@ -25,6 +25,8 @@
 list(APPEND SOURCE_CLIENT_WIN32
     app.cc
     app.h
+    auth_dialog.cc
+    auth_dialog.h
     entry_point.cc
     main_window.cc
     main_window.h
