@@ -501,6 +501,93 @@ BEGIN
     PUSHBUTTON      "Cancel",                 IDCANCEL,                              223, 220,  50,  14
 END
 
+IDD_CONSOLE_ADDRESS_BOOK DIALOGEX 0, 0, 320, 240
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Address Book Properties"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Name:",              IDC_CONSOLE_AB_LABEL_NAME,             7,  10,  90,   9
+    EDITTEXT        IDC_CONSOLE_AB_NAME,                                       100,   8, 213,  12, ES_AUTOHSCROLL
+    LTEXT           "Encryption:",        IDC_CONSOLE_AB_LABEL_ENCRYPTION,       7,  28,  90,   9
+    COMBOBOX        IDC_CONSOLE_AB_ENCRYPTION,                                 100,  26, 213,  60, CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Password:",          IDC_CONSOLE_AB_LABEL_PASSWORD,         7,  46,  90,   9
+    EDITTEXT        IDC_CONSOLE_AB_PASSWORD,                                   100,  44, 197,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    PUSHBUTTON      "...",                IDC_CONSOLE_AB_SHOW_PASSWORD,        300,  43,  13,  14
+    LTEXT           "Password (repeat):", IDC_CONSOLE_AB_LABEL_PASSWORD_RETRY,   7,  62,  90,   9
+    EDITTEXT        IDC_CONSOLE_AB_PASSWORD_RETRY,                             100,  60, 213,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    LTEXT           "Comment:",           IDC_CONSOLE_AB_LABEL_COMMENT,          7,  80,  90,   9
+    EDITTEXT        IDC_CONSOLE_AB_COMMENT,                                      7,  92, 306, 124, ES_MULTILINE | ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL
+    DEFPUSHBUTTON   "OK",                 IDOK,                                208, 220,  50,  14
+    PUSHBUTTON      "Cancel",             IDCANCEL,                            263, 220,  50,  14
+END
+
+IDD_CONSOLE_OPEN_ADDRESS_BOOK DIALOGEX 0, 0, 240, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open Address Book"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    GROUPBOX     "", -1, 7, 7, 226, 78
+    LTEXT        "Address book is encrypted. To open, you must enter a password.",
+                 IDC_CONSOLE_OPEN_ADDRESS_BOOK_PROMPT, 14, 16, 212, 16
+    LTEXT        "File:",
+                 IDC_CONSOLE_OPEN_ADDRESS_BOOK_FILE_LABEL, 14, 38, 50, 10
+    EDITTEXT     IDC_CONSOLE_OPEN_ADDRESS_BOOK_FILE,
+                 68, 36, 158, 12, ES_AUTOHSCROLL | ES_READONLY
+    LTEXT        "Encryption Type:",
+                 IDC_CONSOLE_OPEN_ADDRESS_BOOK_ENC_LABEL, 14, 54, 50, 10
+    EDITTEXT     IDC_CONSOLE_OPEN_ADDRESS_BOOK_ENC,
+                 68, 52, 158, 12, ES_AUTOHSCROLL | ES_READONLY
+    LTEXT        "Password:",
+                 IDC_CONSOLE_OPEN_ADDRESS_BOOK_PWD_LABEL, 14, 70, 50, 10
+    EDITTEXT     IDC_CONSOLE_OPEN_ADDRESS_BOOK_PWD,
+                 68, 68, 138, 12, ES_PASSWORD | ES_AUTOHSCROLL
+    AUTOCHECKBOX "Show", IDC_CONSOLE_OPEN_ADDRESS_BOOK_SHOW,
+                 209, 70, 28, 10
+    DEFPUSHBUTTON "OK",     IDOK,     128, 91, 50, 14
+    PUSHBUTTON    "Cancel", IDCANCEL, 183, 91, 50, 14
+END
+
+IDD_CONSOLE_FAST_CONNECT DIALOGEX 0, 0, 260, 120
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fast Connect"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "",                                 -1,                                    7,   4, 246,  86
+    LTEXT           "Address / ID",                     -1,                                   14,  16, 100,   9
+    COMBOBOX        IDC_CONSOLE_FAST_CONNECT_ADDRESS,                                         14,  28, 232,  60,
+                    CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Session Type",                     -1,                                   14,  48, 100,   9
+    COMBOBOX        IDC_CONSOLE_FAST_CONNECT_SESSION_TYPE,                                    14,  60, 232,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",                               IDOK,                                148,  98,  50,  14
+    PUSHBUTTON      "Cancel",                           IDCANCEL,                            203,  98,  50,  14
+END
+
+IDD_CONSOLE_UPDATE_SETTINGS DIALOGEX 0, 0, 280, 160
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Update Settings"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "",                       -1,
+                    7,   4, 266, 126
+    AUTOCHECKBOX    "Check for updates on startup",
+                                              IDC_CONSOLE_UPDATE_CHECK_ON_STARTUP,
+                    14,  16, 160,  10
+    PUSHBUTTON      "Check for updates",      IDC_CONSOLE_UPDATE_CHECK_NOW,
+                    180, 14,  86,  14
+    AUTOCHECKBOX    "Use custom update server",
+                                              IDC_CONSOLE_UPDATE_USE_CUSTOM_SERVER,
+                    14,  34, 252,  10
+    LTEXT           "Server:",                IDC_CONSOLE_UPDATE_SERVER_LABEL,
+                    14,  52,  30,   9
+    EDITTEXT        IDC_CONSOLE_UPDATE_SERVER,
+                    50,  50, 216,  12, ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",                     IDOK,
+                    166, 140,  50,  14
+    PUSHBUTTON      "Cancel",                 IDCANCEL,
+                    223, 140,  50,  14
+END
+
 IDD_LOCAL_GROUP DIALOGEX 0, 0, 260, 160
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Group"

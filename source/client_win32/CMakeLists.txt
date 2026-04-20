@@ -31,6 +31,20 @@ list(APPEND SOURCE_CLIENT_WIN32
     auth_dialog.h
     chat_session_window.cc
     chat_session_window.h
+    console_address_book_dialog.cc
+    console_address_book_dialog.h
+    console_computer_dialog.cc
+    console_computer_dialog.h
+    console_computer_group_dialog.cc
+    console_computer_group_dialog.h
+    console_fast_connect_dialog.cc
+    console_fast_connect_dialog.h
+    console_main_window.cc
+    console_main_window.h
+    console_open_address_book_dialog.cc
+    console_open_address_book_dialog.h
+    console_update_settings_dialog.cc
+    console_update_settings_dialog.h
     desktop_config_dialog.cc
     desktop_config_dialog.h
     download_dialog.cc
