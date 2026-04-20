@@ -19,9 +19,17 @@
 #include "client_win32/main_window.h"
 
 #include "client_win32/auth_dialog.h"
+#include "client_win32/desktop_session_adapter.h"
+#include "client_win32/desktop_session_window.h"
 #include "client_win32/resource.h"
+#include "client/client_desktop.h"
+#include "client/config.h"
+#include "client/session_state.h"
+#include "proto/desktop_control.h"
+#include "proto/peer.h"
 
 #include <QCoreApplication>
+#include <QString>
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -172,8 +180,9 @@ void MainWindow::onCommand(int id)
             AuthDialog dialog(instance_, hwnd_);
             if (dialog.exec())
             {
-                // TODO(phase2): wire up session launch once client core is
-                // ported to Win32 (see PHASE2_QT_REMOVAL_PLAN.md, WP5).
+                const AuthDialog::Result& r = dialog.result();
+                if (!r.address.empty())
+                    launchDesktopSession(r.address, r.port, r.username, r.password);
             }
             break;
         }
@@ -189,7 +198,46 @@ void MainWindow::onCommand(int id)
 
 void MainWindow::onDestroy()
 {
+    // Destroy all active sessions before the message loop exits.
+    sessions_.clear();
     QCoreApplication::quit();
+}
+
+void MainWindow::launchDesktopSession(const std::wstring& address, uint16_t port,
+                                      const std::wstring& username,
+                                      const std::wstring& password)
+{
+    client::Config cfg;
+    cfg.address_or_id = QString::fromStdWString(address);
+    cfg.port          = port;
+    cfg.username      = QString::fromStdWString(username);
+    cfg.password      = QString::fromStdWString(password);
+    cfg.session_type  = proto::peer::SESSION_TYPE_DESKTOP_MANAGE;
+
+    auto state = std::make_shared<client::SessionState>(cfg);
+
+    proto::control::Config desktop_cfg;
+    // Use default desktop config (codec/quality chosen by the host).
+
+    auto entry = std::make_unique<Session>();
+
+    entry->client = std::make_unique<client::ClientDesktop>(desktop_cfg);
+    entry->client->setSessionState(state);
+
+    entry->window = std::make_unique<DesktopSessionWindow>(instance_);
+    if (!entry->window->create())
+        return;
+
+    const std::wstring title = address + L" \u2014 Aspia Remote Desktop";
+    entry->window->setTitle(title.c_str());
+
+    entry->adapter = std::make_unique<DesktopSessionAdapter>(
+        entry->client.get(), entry->window.get());
+
+    entry->window->show();
+    entry->client->start();
+
+    sessions_.push_back(std::move(entry));
 }
 
 }  // namespace aspia::client_win32

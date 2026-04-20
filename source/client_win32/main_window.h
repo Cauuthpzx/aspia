@@ -21,7 +21,17 @@
 
 #include <windows.h>
 
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
+namespace client { class ClientDesktop; }
+
 namespace aspia::client_win32 {
+
+class DesktopSessionWindow;
+class DesktopSessionAdapter;
 
 class MainWindow
 {
@@ -47,9 +57,22 @@ private:
     void onCommand(int id);
     void onDestroy();
 
+    void launchDesktopSession(const std::wstring& address, uint16_t port,
+                              const std::wstring& username,
+                              const std::wstring& password);
+
+    // Owned active sessions. Each entry is kept alive until it is closed.
+    struct Session
+    {
+        std::unique_ptr<client::ClientDesktop>   client;
+        std::unique_ptr<DesktopSessionWindow>    window;
+        std::unique_ptr<DesktopSessionAdapter>   adapter;
+    };
+    std::vector<std::unique_ptr<Session>> sessions_;
+
     HINSTANCE instance_;
-    HWND hwnd_ = nullptr;
-    HWND tabs_ = nullptr;
+    HWND hwnd_   = nullptr;
+    HWND tabs_   = nullptr;
     HWND status_ = nullptr;
     HACCEL accel_ = nullptr;
 

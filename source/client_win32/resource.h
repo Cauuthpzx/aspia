@@ -64,10 +64,12 @@
 #define IDC_MAIN_STATUSBAR    1002
 
 // Authorization dialog control IDs
-#define IDC_AUTH_USERNAME     2001
-#define IDC_AUTH_PASSWORD     2002
-#define IDC_AUTH_SHOW_PASSWORD 2003
-#define IDC_AUTH_ONE_TIME     2004
+#define IDC_AUTH_ADDRESS       2000
+#define IDC_AUTH_PORT          2001
+#define IDC_AUTH_USERNAME      2002
+#define IDC_AUTH_PASSWORD      2003
+#define IDC_AUTH_SHOW_PASSWORD 2004
+#define IDC_AUTH_ONE_TIME      2005
 
 // About dialog control IDs
 #define IDC_ABOUT_NAME        2100

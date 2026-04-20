@@ -108,17 +108,29 @@ INT_PTR AuthDialog::handleMessage(HWND hwnd, UINT msg, WPARAM wp, LPARAM /*lp*/)
 
 void AuthDialog::onInitDialog(HWND hwnd)
 {
+    SendDlgItemMessageW(hwnd, IDC_AUTH_ADDRESS,  EM_LIMITTEXT, 255, 0);
+    SendDlgItemMessageW(hwnd, IDC_AUTH_PORT,     EM_LIMITTEXT,   5, 0);
     SendDlgItemMessageW(hwnd, IDC_AUTH_USERNAME, EM_LIMITTEXT, 128, 0);
     SendDlgItemMessageW(hwnd, IDC_AUTH_PASSWORD, EM_LIMITTEXT, 128, 0);
-    SetFocus(GetDlgItem(hwnd, IDC_AUTH_USERNAME));
+
+    // Pre-fill default port.
+    SetDlgItemTextW(hwnd, IDC_AUTH_PORT, L"8050");
+
+    SetFocus(GetDlgItem(hwnd, IDC_AUTH_ADDRESS));
 }
 
 void AuthDialog::onOk(HWND hwnd)
 {
-    result_.username = readEditText(GetDlgItem(hwnd, IDC_AUTH_USERNAME));
-    result_.password = readEditText(GetDlgItem(hwnd, IDC_AUTH_PASSWORD));
-    result_.oneTimePassword =
-        (IsDlgButtonChecked(hwnd, IDC_AUTH_ONE_TIME) == BST_CHECKED);
+    result_.address  = readEditText(GetDlgItem(hwnd, IDC_AUTH_ADDRESS));
+
+    const std::wstring portStr = readEditText(GetDlgItem(hwnd, IDC_AUTH_PORT));
+    result_.port = portStr.empty()
+        ? uint16_t(8050)
+        : static_cast<uint16_t>(_wtoi(portStr.c_str()));
+
+    result_.username        = readEditText(GetDlgItem(hwnd, IDC_AUTH_USERNAME));
+    result_.password        = readEditText(GetDlgItem(hwnd, IDC_AUTH_PASSWORD));
+    result_.oneTimePassword = (IsDlgButtonChecked(hwnd, IDC_AUTH_ONE_TIME) == BST_CHECKED);
 }
 
 void AuthDialog::togglePasswordVisibility(HWND hwnd)

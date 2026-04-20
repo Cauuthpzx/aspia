@@ -23,6 +23,7 @@
 
 #include <windows.h>
 
+#include <cstdint>
 #include <string>
 
 namespace aspia::client_win32 {
@@ -32,9 +33,11 @@ class AuthDialog
 public:
     struct Result
     {
+        std::wstring address;
+        uint16_t     port = 8050;
         std::wstring username;
         std::wstring password;
-        bool oneTimePassword = false;
+        bool         oneTimePassword = false;
     };
 
     AuthDialog(HINSTANCE instance, HWND parent);
