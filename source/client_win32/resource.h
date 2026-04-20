@@ -43,6 +43,7 @@
 #define IDD_HOST_CHECK_PASSWORD    370
 #define IDD_HOST_CONNECT_CONFIRM   380
 #define IDD_HOST_USER              390
+#define IDD_HOST_CONFIG            430
 #define IDD_CONSOLE_ADDRESS_BOOK      450
 #define IDD_CONSOLE_OPEN_ADDRESS_BOOK 460
 #define IDD_CONSOLE_FAST_CONNECT      470
@@ -289,6 +290,40 @@
 #define IDC_HOST_NOTIFIER_LOCK_KEYBD  6403
 #define IDC_HOST_NOTIFIER_PAUSE       6404
 #define IDC_HOST_NOTIFIER_COLLAPSE    6405
+
+// Host config dialog control IDs (General tab)
+#define IDC_HOST_CONFIG_PORT                         6600
+#define IDC_HOST_CONFIG_ALLOW_UDP                    6601
+#define IDC_HOST_CONFIG_VIDEO_CAPTURER               6602
+#define IDC_HOST_CONFIG_AUTO_UPDATE                  6603
+#define IDC_HOST_CONFIG_UPDATE_CHECK_FREQ            6604
+#define IDC_HOST_CONFIG_USE_CUSTOM_UPDATE_SERVER     6605
+#define IDC_HOST_CONFIG_UPDATE_SERVER                6606
+#define IDC_HOST_CONFIG_CHECK_UPDATES_NOW            6607
+#define IDC_HOST_CONFIG_IMPORT                       6608
+#define IDC_HOST_CONFIG_EXPORT                       6609
+// Host config dialog control IDs (Security tab)
+#define IDC_HOST_CONFIG_CHANGE_PASSWORD              6620
+#define IDC_HOST_CONFIG_PASS_PROTECTION              6621
+#define IDC_HOST_CONFIG_ONETIME_PASSWORD_ENABLE      6622
+#define IDC_HOST_CONFIG_ONETIME_PASS_CHANGE          6623
+#define IDC_HOST_CONFIG_ONETIME_PASS_CHARS           6624
+#define IDC_HOST_CONFIG_ONETIME_PASS_CHAR_COUNT      6625
+#define IDC_HOST_CONFIG_CONN_CONFIRM_REQUIRE         6626
+#define IDC_HOST_CONFIG_CONN_CONFIRM_AUTO            6627
+#define IDC_HOST_CONFIG_NO_USER_ACTION               6628
+#define IDC_HOST_CONFIG_DISABLE_SHUTDOWN             6629
+// Host config dialog control IDs (Router tab)
+#define IDC_HOST_CONFIG_ENABLE_ROUTER                6640
+#define IDC_HOST_CONFIG_ROUTER_ADDRESS               6641
+#define IDC_HOST_CONFIG_ROUTER_PUBLIC_KEY            6642
+// Host config dialog control IDs (Users tab)
+#define IDC_HOST_CONFIG_USERS_LIST                   6660
+#define IDC_HOST_CONFIG_USER_ADD                     6661
+#define IDC_HOST_CONFIG_USER_MODIFY                  6662
+#define IDC_HOST_CONFIG_USER_DELETE                  6663
+// Host config dialog Apply button
+#define IDC_HOST_CONFIG_APPLY                        6680
 
 // Host main window control IDs
 #define IDC_HOST_MAIN_LABEL_ID         6500

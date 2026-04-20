@@ -604,3 +604,144 @@ BEGIN
     DEFPUSHBUTTON   "OK",            IDOK,                       148, 140,  50,  14
     PUSHBUTTON      "Cancel",        IDCANCEL,                   203, 140,  50,  14
 END
+
+// ============================================================
+// Host Config / Settings dialog
+// Four Qt tabs (General, Security, Router, Users) flattened
+// into titled GROUPBOXes arranged vertically.
+// ============================================================
+IDD_HOST_CONFIG DIALOGEX 0, 0, 360, 624
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Settings"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    // ---- General tab: Common group ------------------------------------
+    GROUPBOX        "Common",                          -1,
+                    7,   4, 346,  56
+    LTEXT           "Incoming port:",                  -1,
+                    14,  16, 100,   9
+    EDITTEXT        IDC_HOST_CONFIG_PORT,
+                    218,  14,  50,  12, ES_AUTOHSCROLL | ES_NUMBER
+    AUTOCHECKBOX    "Allow UDP connections",           IDC_HOST_CONFIG_ALLOW_UDP,
+                    14,  30, 332,  10
+    LTEXT           "Preferred video capturer:",       -1,
+                    14,  46, 114,   9
+    COMBOBOX        IDC_HOST_CONFIG_VIDEO_CAPTURER,
+                    132,  44, 214,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+
+    // ---- General tab: Update Server group ----------------------------
+    GROUPBOX        "Update Server",                   -1,
+                    7,  64, 346,  88
+    AUTOCHECKBOX    "Automatic checking and installation of updates",
+                                                       IDC_HOST_CONFIG_AUTO_UPDATE,
+                    14,  76, 332,  10
+    LTEXT           "Check for updates:",              -1,
+                    14,  92,  94,   9
+    COMBOBOX        IDC_HOST_CONFIG_UPDATE_CHECK_FREQ,
+                    112,  90, 106,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    AUTOCHECKBOX    "Use custom update server",        IDC_HOST_CONFIG_USE_CUSTOM_UPDATE_SERVER,
+                    14, 106, 332,  10
+    LTEXT           "Server:",                         -1,
+                    14, 122,  36,   9
+    EDITTEXT        IDC_HOST_CONFIG_UPDATE_SERVER,
+                    54, 120, 202,  12, ES_AUTOHSCROLL
+    PUSHBUTTON      "Check for updates",               IDC_HOST_CONFIG_CHECK_UPDATES_NOW,
+                    260, 118,  86,  14
+
+    // ---- General tab: Settings (import/export) group -----------------
+    GROUPBOX        "Settings",                        -1,
+                    7, 156, 346,  32
+    PUSHBUTTON      "Import settings",                 IDC_HOST_CONFIG_IMPORT,
+                    186, 168,  80,  14
+    PUSHBUTTON      "Export settings",                 IDC_HOST_CONFIG_EXPORT,
+                    272, 168,  74,  14
+
+    // ---- Security tab: Password Protection group ---------------------
+    GROUPBOX        "Password Protection of Settings", -1,
+                    7, 192, 346,  32
+    PUSHBUTTON      "Change password",                 IDC_HOST_CONFIG_CHANGE_PASSWORD,
+                    158, 204,  86,  14
+    PUSHBUTTON      "Install",                         IDC_HOST_CONFIG_PASS_PROTECTION,
+                    250, 204,  96,  14
+
+    // ---- Security tab: One-time Password group -----------------------
+    GROUPBOX        "One-time Password",               -1,
+                    7, 228, 346,  72
+    AUTOCHECKBOX    "Enable one-time password",        IDC_HOST_CONFIG_ONETIME_PASSWORD_ENABLE,
+                    14, 240, 332,  10
+    LTEXT           "Change password:",                -1,
+                    22, 256,  82,   9
+    COMBOBOX        IDC_HOST_CONFIG_ONETIME_PASS_CHANGE,
+                    108, 254, 154,  80,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Characters:",                     -1,
+                    22, 270,  82,   9
+    COMBOBOX        IDC_HOST_CONFIG_ONETIME_PASS_CHARS,
+                    108, 268, 154,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Characters count:",               -1,
+                    22, 284,  82,   9
+    EDITTEXT        IDC_HOST_CONFIG_ONETIME_PASS_CHAR_COUNT,
+                    108, 282,  40,  12, ES_AUTOHSCROLL | ES_NUMBER
+
+    // ---- Security tab: Connection Confirmation group -----------------
+    GROUPBOX        "Connection Confirmation",         -1,
+                    7, 304, 346,  58
+    AUTOCHECKBOX    "Require confirmation when connected to a computer",
+                                                       IDC_HOST_CONFIG_CONN_CONFIRM_REQUIRE,
+                    14, 316, 332,  10
+    LTEXT           "Automatic confirmation via:",     -1,
+                    22, 332, 104,   9
+    COMBOBOX        IDC_HOST_CONFIG_CONN_CONFIRM_AUTO,
+                    130, 330, 216,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "If there is no active user:",     -1,
+                    22, 346, 104,   9
+    COMBOBOX        IDC_HOST_CONFIG_NO_USER_ACTION,
+                    130, 344, 216,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+
+    // ---- Security tab: Other group -----------------------------------
+    GROUPBOX        "Other",                           -1,
+                    7, 366, 346,  28
+    AUTOCHECKBOX    "Disable Aspia shutdown",          IDC_HOST_CONFIG_DISABLE_SHUTDOWN,
+                    14, 378, 332,  10
+
+    // ---- Router tab --------------------------------------------------
+    GROUPBOX        "Router",                          -1,
+                    7, 398, 346, 112
+    AUTOCHECKBOX    "Enable the use of a router",      IDC_HOST_CONFIG_ENABLE_ROUTER,
+                    14, 410, 332,  10
+    LTEXT           "Address:",                        -1,
+                    14, 426,  48,   9
+    EDITTEXT        IDC_HOST_CONFIG_ROUTER_ADDRESS,
+                    66, 424, 280,  12, ES_AUTOHSCROLL
+    LTEXT           "Public Key:",                     -1,
+                    14, 440, 332,   9
+    EDITTEXT        IDC_HOST_CONFIG_ROUTER_PUBLIC_KEY,
+                    14, 452, 332,  50,
+                    ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+
+    // ---- Users tab ---------------------------------------------------
+    GROUPBOX        "Users",                           -1,
+                    7, 514, 346,  88
+    LISTBOX         IDC_HOST_CONFIG_USERS_LIST,
+                    14, 526, 284,  68,
+                    LBS_NOINTEGRALHEIGHT | LBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Add",                             IDC_HOST_CONFIG_USER_ADD,
+                    304, 526,  42,  14
+    PUSHBUTTON      "Edit",                            IDC_HOST_CONFIG_USER_MODIFY,
+                    304, 544,  42,  14
+    PUSHBUTTON      "Delete",                          IDC_HOST_CONFIG_USER_DELETE,
+                    304, 562,  42,  14
+
+    // ---- Dialog buttons ----------------------------------------------
+    DEFPUSHBUTTON   "OK",                              IDOK,
+                    193, 608,  50,  14
+    PUSHBUTTON      "Apply",                           IDC_HOST_CONFIG_APPLY,
+                    249, 608,  50,  14
+    PUSHBUTTON      "Cancel",                          IDCANCEL,
+                    305, 608,  50,  14
+END

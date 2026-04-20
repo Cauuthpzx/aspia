@@ -62,6 +62,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     host_change_password_dialog.h
     host_check_password_dialog.cc
     host_check_password_dialog.h
+    host_config_dialog.cc
+    host_config_dialog.h
     host_connect_confirm_dialog.cc
     host_connect_confirm_dialog.h
     host_main_window.cc
