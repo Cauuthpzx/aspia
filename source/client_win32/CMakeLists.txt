@@ -47,6 +47,10 @@ list(APPEND SOURCE_CLIENT_WIN32
     console_update_settings_dialog.h
     desktop_config_dialog.cc
     desktop_config_dialog.h
+    desktop_session_window.cc
+    desktop_session_window.h
+    desktop_toolbar.cc
+    desktop_toolbar.h
     download_dialog.cc
     download_dialog.h
     entry_point.cc
@@ -78,6 +82,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     local_computer_dialog.h
     local_group_dialog.cc
     local_group_dialog.h
+    local_group_widget.cc
+    local_group_widget.h
     main_window.cc
     main_window.h
     record_settings_dialog.cc
@@ -85,10 +91,14 @@ list(APPEND SOURCE_CLIENT_WIN32
     resource.h
     router_dialog.cc
     router_dialog.h
+    router_group_widget.cc
+    router_group_widget.h
     router_manager_window.cc
     router_manager_window.h
     router_user_dialog.cc
     router_user_dialog.h
+    router_widget.cc
+    router_widget.h
     settings_dialog.cc
     settings_dialog.h
     statistics_dialog.cc
@@ -135,6 +145,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     sys_info_summary.h
     sys_info_video_adapters.cc
     sys_info_video_adapters.h
+    system_info_session_window.cc
+    system_info_session_window.h
     task_manager_window.cc
     task_manager_window.h
     client.rc

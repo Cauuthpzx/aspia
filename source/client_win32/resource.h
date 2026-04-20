@@ -473,6 +473,69 @@
 #define IDC_HOST_USER_SESSION_TEXT_CHAT          3914
 #define IDC_HOST_USER_SESSION_PORT_FORWARDING    3915
 
+// Desktop toolbar button / menu command IDs (8000..8099)
+#define IDC_DT_PIN                8000
+#define IDC_DT_SWITCH_SESSION     8001
+#define IDC_DT_POWER_CONTROL      8002
+#define IDC_DT_CAD                8003
+#define IDC_DT_SETTINGS           8004
+#define IDC_DT_AUTOSIZE           8005
+#define IDC_DT_FULLSCREEN         8006
+#define IDC_DT_FILE_TRANSFER      8007
+#define IDC_DT_TEXT_CHAT          8008
+#define IDC_DT_TASK_MANAGER       8009
+#define IDC_DT_SYSTEM_INFO        8010
+#define IDC_DT_MENU               8011
+#define IDC_DT_MINIMIZE           8012
+#define IDC_DT_CLOSE              8013
+// Power control popup menu
+#define IDM_DT_SHUTDOWN           8020
+#define IDM_DT_REBOOT             8021
+#define IDM_DT_REBOOT_SAFE_MODE   8022
+#define IDM_DT_LOGOFF             8023
+#define IDM_DT_LOCK               8024
+// Advanced popup menu
+#define IDM_DT_SCREENSHOT         8030
+#define IDM_DT_STATISTICS         8031
+#define IDM_DT_RECORDING_SETTINGS 8032
+#define IDM_DT_START_RECORDING    8033
+#define IDM_DT_PAUSE_VIDEO        8034
+#define IDM_DT_PAUSE_AUDIO        8035
+#define IDM_DT_PASTE_CLIPBOARD    8036
+#define IDM_DT_SEND_KEY_COMBOS    8037
+#define IDM_DT_AUTOSCROLL         8038
+// Scale sub-menu items
+#define IDM_DT_SCALE_FIT          8040
+#define IDM_DT_SCALE_100          8041
+#define IDM_DT_SCALE_90           8042
+#define IDM_DT_SCALE_80           8043
+#define IDM_DT_SCALE_70           8044
+#define IDM_DT_SCALE_60           8045
+#define IDM_DT_SCALE_50           8046
+
+// Local group widget control IDs (8100..8109)
+#define IDC_LOCAL_GROUP_WIDGET_LIST  8100
+
+// Router widget control IDs (8110..8119)
+#define IDC_ROUTER_WIDGET_LABEL      8110
+
+// Router group widget control IDs (8120..8129)
+#define IDC_ROUTER_GROUP_WIDGET_LIST 8120
+
+// System info session window control IDs (8200..8299)
+#define IDC_SYSINFO_WIN_TOOLBAR      8200
+#define IDC_SYSINFO_WIN_TREE_CAT     8201
+#define IDC_SYSINFO_WIN_CONTENT      8202
+#define IDM_SYSINFO_SAVE             8210
+#define IDM_SYSINFO_PRINT            8211
+#define IDM_SYSINFO_REFRESH          8212
+#define IDM_SYSINFO_COPY_ROW         8213
+#define IDM_SYSINFO_COPY_NAME        8214
+#define IDM_SYSINFO_COPY_VALUE       8215
+
+// Desktop session window control IDs (8300..8399)
+#define IDC_DESKTOP_WIN_CANVAS       8300
+
 // Menu command IDs
 #define ID_FILE_EXIT         40001
 #define ID_FILE_CONNECT      40002
