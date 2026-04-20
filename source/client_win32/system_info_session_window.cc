@@ -20,6 +20,8 @@
 
 #include "client_win32/resource.h"
 
+#include <windowsx.h>   // GET_X_LPARAM, GET_Y_LPARAM
+
 namespace aspia::client_win32 {
 
 namespace {
