@@ -247,9 +247,18 @@
 #define IDC_HOSTS_LIST      4302
 
 // Sys-info child widgets list control IDs
-#define IDC_SYSINFO_PROCESSES_LIST   4400
-#define IDC_SYSINFO_SUMMARY_TREE     4500
-#define IDC_SYSINFO_APPS_LIST        4600
+#define IDC_SYSINFO_PROCESSES_LIST          4400
+#define IDC_SYSINFO_SUMMARY_TREE            4500
+#define IDC_SYSINFO_APPS_LIST               4600
+#define IDC_SYSINFO_SERVICES_LIST           4700
+#define IDC_SYSINFO_CONNECTIONS_LIST        4800
+#define IDC_SYSINFO_DEVICES_LIST            4900
+#define IDC_SYSINFO_DRIVERS_LIST            5000
+#define IDC_SYSINFO_EVENT_LOGS_LIST         5100
+#define IDC_SYSINFO_EVENT_LOGS_COMBO        5101
+#define IDC_SYSINFO_LICENSES_LIST           5200
+#define IDC_SYSINFO_LOCAL_USERS_LIST        5300
+#define IDC_SYSINFO_LOCAL_USER_GROUPS_LIST  5400
 
 // Menu command IDs
 #define ID_FILE_EXIT         40001

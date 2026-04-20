@@ -69,8 +69,24 @@ list(APPEND SOURCE_CLIENT_WIN32
     status_dialog.h
     sys_info_applications.cc
     sys_info_applications.h
+    sys_info_connections.cc
+    sys_info_connections.h
+    sys_info_devices.cc
+    sys_info_devices.h
+    sys_info_drivers.cc
+    sys_info_drivers.h
+    sys_info_event_logs.cc
+    sys_info_event_logs.h
+    sys_info_licenses.cc
+    sys_info_licenses.h
+    sys_info_local_user_groups.cc
+    sys_info_local_user_groups.h
+    sys_info_local_users.cc
+    sys_info_local_users.h
     sys_info_processes.cc
     sys_info_processes.h
+    sys_info_services.cc
+    sys_info_services.h
     sys_info_summary.cc
     sys_info_summary.h
     task_manager_window.cc
