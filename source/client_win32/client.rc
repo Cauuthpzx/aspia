@@ -425,6 +425,82 @@ BEGIN
     PUSHBUTTON      "Cancel",                 IDCANCEL,                            223, 200,  50,  14
 END
 
+IDD_HOST_CHANGE_PASSWORD DIALOGEX 0, 0, 280, 160
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Change Password"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Old password:",            -1,                                    7,  10,  90,   9
+    EDITTEXT        IDC_HOST_CHANGE_PASSWORD_OLD,                                    100,   8, 157,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    PUSHBUTTON      "...",                      IDC_HOST_CHANGE_PASSWORD_SHOW,      260,   7,  13,  14
+    LTEXT           "New password:",            -1,                                    7,  28,  90,   9
+    EDITTEXT        IDC_HOST_CHANGE_PASSWORD_NEW,                                    100,  26, 173,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    LTEXT           "New password (repeat):",   -1,                                    7,  46,  90,   9
+    EDITTEXT        IDC_HOST_CHANGE_PASSWORD_NEW_REPEAT,                             100,  44, 173,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    DEFPUSHBUTTON   "OK",                       IDOK,                                168, 139,  50,  14
+    PUSHBUTTON      "Cancel",                   IDCANCEL,                            223, 139,  50,  14
+END
+
+IDD_HOST_CHECK_PASSWORD DIALOGEX 0, 0, 220, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Password Protection"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT        "The configuration is password protected. Enter the password to view and change the configuration.",
+                 IDC_HOST_CHECK_PASSWORD_PROMPT, 7, 7, 206, 24
+    GROUPBOX     "", -1, 7, 35, 206, 30
+    LTEXT        "Password:", IDC_HOST_CHECK_PASSWORD_LABEL, 14, 46, 40, 10
+    EDITTEXT     IDC_HOST_CHECK_PASSWORD_EDIT, 58, 44, 120, 14,
+                 ES_PASSWORD | ES_AUTOHSCROLL
+    AUTOCHECKBOX "Show", IDC_HOST_CHECK_PASSWORD_SHOW, 182, 46, 28, 10
+    DEFPUSHBUTTON "OK",     IDOK,     108, 78, 50, 14
+    PUSHBUTTON    "Cancel", IDCANCEL, 163, 78, 50, 14
+END
+
+IDD_HOST_CONNECT_CONFIRM DIALOGEX 0, 0, 280, 180
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirmation of connection"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "A remote client is requesting a connection to this computer.",
+                    -1, 10, 10, 260, 20
+    LTEXT           "Client address:", -1, 10, 40, 70, 10
+    LTEXT           "", IDC_HOST_CONFIRM_CLIENT_ADDRESS, 85, 40, 185, 10
+    LTEXT           "User agent:", -1, 10, 55, 70, 10
+    LTEXT           "", IDC_HOST_CONFIRM_USER_AGENT, 85, 55, 185, 10
+    LTEXT           "Session type:", -1, 10, 70, 70, 10
+    LTEXT           "", IDC_HOST_CONFIRM_SESSION_TYPE, 85, 70, 185, 10
+    LTEXT           "Allow this connection?", -1, 10, 95, 260, 10
+    AUTOCHECKBOX    "Remember my choice", IDC_HOST_CONFIRM_REMEMBER,
+                    10, 115, 260, 12
+    DEFPUSHBUTTON   "Accept", IDOK, 80, 155, 60, 14
+    PUSHBUTTON      "Reject", IDCANCEL, 145, 155, 60, 14
+END
+
+IDD_HOST_USER DIALOGEX 0, 0, 280, 240
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "User Properties"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "User Name:",             -1,                                      7,  10,  70,   9
+    EDITTEXT        IDC_HOST_USER_USERNAME,                                           80,   8, 193,  12, ES_AUTOHSCROLL
+    LTEXT           "Password:",              -1,                                      7,  26,  70,   9
+    EDITTEXT        IDC_HOST_USER_PASSWORD,                                           80,  24, 177,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    PUSHBUTTON      "...",                    IDC_HOST_USER_SHOW_PASSWORD,           260,  23,  13,  14
+    LTEXT           "Password (repeat):",     -1,                                      7,  42,  70,   9
+    EDITTEXT        IDC_HOST_USER_PASSWORD_RETRY,                                     80,  40, 193,  12, ES_AUTOHSCROLL | ES_PASSWORD
+    AUTOCHECKBOX    "Disable User Account",   IDC_HOST_USER_DISABLE,                   7,  60, 266,  10
+    GROUPBOX        "Allowed Session Types:", IDC_HOST_USER_SESSIONS_GROUP,            7,  75, 266, 140
+    AUTOCHECKBOX    "Manage Desktop",         IDC_HOST_USER_SESSION_DESKTOP_MANAGE,   14,  88, 252,  10
+    AUTOCHECKBOX    "View Desktop",           IDC_HOST_USER_SESSION_DESKTOP_VIEW,     14, 102, 252,  10
+    AUTOCHECKBOX    "File Transfer",          IDC_HOST_USER_SESSION_FILE_TRANSFER,    14, 116, 252,  10
+    AUTOCHECKBOX    "System Information",     IDC_HOST_USER_SESSION_SYSTEM_INFO,      14, 130, 252,  10
+    AUTOCHECKBOX    "Text Chat",              IDC_HOST_USER_SESSION_TEXT_CHAT,        14, 144, 252,  10
+    AUTOCHECKBOX    "Port Forwarding",        IDC_HOST_USER_SESSION_PORT_FORWARDING,  14, 158, 252,  10
+    DEFPUSHBUTTON   "OK",                     IDOK,                                  168, 220,  50,  14
+    PUSHBUTTON      "Cancel",                 IDCANCEL,                              223, 220,  50,  14
+END
+
 IDD_LOCAL_GROUP DIALOGEX 0, 0, 260, 160
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Group"

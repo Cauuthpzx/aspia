@@ -39,11 +39,18 @@
 #define IDD_LOCAL_COMPUTER     330
 #define IDD_ROUTER_USER        340
 #define IDD_LOCAL_GROUP        350
+#define IDD_HOST_CHANGE_PASSWORD   360
+#define IDD_HOST_CHECK_PASSWORD    370
+#define IDD_HOST_CONNECT_CONFIRM   380
+#define IDD_HOST_USER              390
 
 // Accelerator / message IDs for top-level windows (no dialog template)
 #define IDR_TASKMGR_ACCEL      290
 #define IDM_CHAT_SEND          320
 #define IDR_ROUTER_MGR_ACCEL   400
+#define IDR_HOST_NOTIFIER_ACCEL 410
+#define IDR_HOST_MAIN_MENU     420
+#define IDR_HOST_MAIN_ACCEL    421
 
 // Main window child-control IDs
 #define IDC_MAIN_TABS         1001
@@ -267,6 +274,60 @@
 #define IDC_SYSINFO_ROUTES_LIST             6000
 #define IDC_SYSINFO_VIDEO_ADAPTERS_LIST     6100
 #define IDC_SYSINFO_POWER_OPTIONS_TREE      6200
+#define IDC_SYSINFO_ENV_VARS_LIST           6300
+
+// Host notifier window control IDs
+#define IDC_HOST_NOTIFIER_LIST        6400
+#define IDC_HOST_NOTIFIER_DISCONNECT  6401
+#define IDC_HOST_NOTIFIER_LOCK_MOUSE  6402
+#define IDC_HOST_NOTIFIER_LOCK_KEYBD  6403
+#define IDC_HOST_NOTIFIER_PAUSE       6404
+#define IDC_HOST_NOTIFIER_COLLAPSE    6405
+
+// Host main window control IDs
+#define IDC_HOST_MAIN_LABEL_ID         6500
+#define IDC_HOST_MAIN_VALUE_ID         6501
+#define IDC_HOST_MAIN_VALUE_IP         6502
+#define IDC_HOST_MAIN_VALUE_STATUS     6503
+#define IDC_HOST_MAIN_ACCEPT_INCOMING  6530
+#define IDC_HOST_MAIN_USE_PASSWORD     6531
+#define IDC_HOST_MAIN_CHANGE_PASSWORD  6540
+#define IDC_HOST_MAIN_SETTINGS         6541
+#define IDC_HOST_MAIN_HELP             6542
+#define IDC_HOST_MAIN_EXIT             6543
+#define IDC_HOST_MAIN_STATUSBAR        6590
+
+// Host change-password dialog control IDs
+#define IDC_HOST_CHANGE_PASSWORD_OLD         3600
+#define IDC_HOST_CHANGE_PASSWORD_NEW         3601
+#define IDC_HOST_CHANGE_PASSWORD_NEW_REPEAT  3602
+#define IDC_HOST_CHANGE_PASSWORD_SHOW        3603
+
+// Host check-password dialog control IDs
+#define IDC_HOST_CHECK_PASSWORD_PROMPT  3700
+#define IDC_HOST_CHECK_PASSWORD_LABEL   3701
+#define IDC_HOST_CHECK_PASSWORD_EDIT    3702
+#define IDC_HOST_CHECK_PASSWORD_SHOW    3703
+
+// Host connect-confirm dialog control IDs
+#define IDC_HOST_CONFIRM_CLIENT_ADDRESS 3800
+#define IDC_HOST_CONFIRM_USER_AGENT     3801
+#define IDC_HOST_CONFIRM_SESSION_TYPE   3802
+#define IDC_HOST_CONFIRM_REMEMBER       3803
+
+// Host user dialog control IDs
+#define IDC_HOST_USER_USERNAME                   3900
+#define IDC_HOST_USER_PASSWORD                   3901
+#define IDC_HOST_USER_PASSWORD_RETRY             3902
+#define IDC_HOST_USER_SHOW_PASSWORD              3903
+#define IDC_HOST_USER_DISABLE                    3904
+#define IDC_HOST_USER_SESSIONS_GROUP             3905
+#define IDC_HOST_USER_SESSION_DESKTOP_MANAGE     3910
+#define IDC_HOST_USER_SESSION_DESKTOP_VIEW       3911
+#define IDC_HOST_USER_SESSION_FILE_TRANSFER      3912
+#define IDC_HOST_USER_SESSION_SYSTEM_INFO        3913
+#define IDC_HOST_USER_SESSION_TEXT_CHAT          3914
+#define IDC_HOST_USER_SESSION_PORT_FORWARDING    3915
 
 // Menu command IDs
 #define ID_FILE_EXIT         40001

@@ -44,6 +44,18 @@ list(APPEND SOURCE_CLIENT_WIN32
     file_transfer_dialog.h
     file_transfer_session_window.cc
     file_transfer_session_window.h
+    host_change_password_dialog.cc
+    host_change_password_dialog.h
+    host_check_password_dialog.cc
+    host_check_password_dialog.h
+    host_connect_confirm_dialog.cc
+    host_connect_confirm_dialog.h
+    host_main_window.cc
+    host_main_window.h
+    host_notifier_window.cc
+    host_notifier_window.h
+    host_user_dialog.cc
+    host_user_dialog.h
     hosts_tab.cc
     hosts_tab.h
     local_computer_dialog.cc
@@ -75,6 +87,8 @@ list(APPEND SOURCE_CLIENT_WIN32
     sys_info_devices.h
     sys_info_drivers.cc
     sys_info_drivers.h
+    sys_info_env_vars.cc
+    sys_info_env_vars.h
     sys_info_event_logs.cc
     sys_info_event_logs.h
     sys_info_licenses.cc
