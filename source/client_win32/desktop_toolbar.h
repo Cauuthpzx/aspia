@@ -150,9 +150,13 @@ private:
     HWND      toolbar_ = nullptr;
     Delegate  delegate_;
 
-    bool pinned_     = false;
-    bool fullscreen_ = false;
-    bool recording_  = false;
+    bool pinned_        = false;
+    bool fullscreen_    = false;
+    bool recording_     = false;
+    bool pauseVideo_    = false;
+    bool pauseAudio_    = false;
+    bool sendKeyCombos_ = false;
+    bool autoscroll_    = false;
 
     static constexpr wchar_t kClassName[] = L"AspiaClientWin32DesktopToolbar";
 };

@@ -129,7 +129,7 @@ LRESULT CALLBACK LocalGroupWidget::windowProc(
     return DefWindowProcW(hwnd, msg, wp, lp);
 }
 
-LRESULT LocalGroupWidget::handleMessage(UINT msg, WPARAM /*wp*/, LPARAM lp)
+LRESULT LocalGroupWidget::handleMessage(UINT msg, WPARAM wp, LPARAM lp)
 {
     switch (msg)
     {
@@ -146,7 +146,7 @@ LRESULT LocalGroupWidget::handleMessage(UINT msg, WPARAM /*wp*/, LPARAM lp)
             return 0;
 
         default:
-            return DefWindowProcW(hwnd_, msg, 0, lp);
+            return DefWindowProcW(hwnd_, msg, wp, lp);
     }
 }
 

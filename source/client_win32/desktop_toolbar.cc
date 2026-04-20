@@ -451,17 +451,13 @@ void DesktopToolbar::onCommand(int cmdId)
             break;
 
         case IDM_DT_PAUSE_VIDEO:
-            if (delegate_.onPauseVideo)
-                delegate_.onPauseVideo(
-                    (GetMenuState(nullptr, IDM_DT_PAUSE_VIDEO, MF_BYCOMMAND)
-                     & MF_CHECKED) == 0);
+            pauseVideo_ = !pauseVideo_;
+            if (delegate_.onPauseVideo) delegate_.onPauseVideo(pauseVideo_);
             break;
 
         case IDM_DT_PAUSE_AUDIO:
-            if (delegate_.onPauseAudio)
-                delegate_.onPauseAudio(
-                    (GetMenuState(nullptr, IDM_DT_PAUSE_AUDIO, MF_BYCOMMAND)
-                     & MF_CHECKED) == 0);
+            pauseAudio_ = !pauseAudio_;
+            if (delegate_.onPauseAudio) delegate_.onPauseAudio(pauseAudio_);
             break;
 
         case IDM_DT_PASTE_CLIPBOARD:
@@ -469,11 +465,13 @@ void DesktopToolbar::onCommand(int cmdId)
             break;
 
         case IDM_DT_SEND_KEY_COMBOS:
-            if (delegate_.onSendKeyCombos) delegate_.onSendKeyCombos(true);
+            sendKeyCombos_ = !sendKeyCombos_;
+            if (delegate_.onSendKeyCombos) delegate_.onSendKeyCombos(sendKeyCombos_);
             break;
 
         case IDM_DT_AUTOSCROLL:
-            if (delegate_.onAutoscroll) delegate_.onAutoscroll(true);
+            autoscroll_ = !autoscroll_;
+            if (delegate_.onAutoscroll) delegate_.onAutoscroll(autoscroll_);
             break;
 
         case IDM_DT_SCALE_FIT:

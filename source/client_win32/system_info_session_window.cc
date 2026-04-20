@@ -440,7 +440,7 @@ void SystemInfoSessionWindow::onContextMenu(HWND target, int screenX, int screen
 
 void SystemInfoSessionWindow::onDestroy()
 {
-    PostQuitMessage(0);
+    // The application layer (App) owns the message loop and decides when to quit.
 }
 
 }  // namespace aspia::client_win32

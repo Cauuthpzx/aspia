@@ -670,7 +670,7 @@ void DesktopSessionWindow::onToolbarAutoSize()
 
 void DesktopSessionWindow::onDestroy()
 {
-    PostQuitMessage(0);
+    // The application layer (App) owns the message loop and decides when to quit.
 }
 
 }  // namespace aspia::client_win32

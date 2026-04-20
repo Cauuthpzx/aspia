@@ -130,7 +130,7 @@ LRESULT CALLBACK RouterGroupWidget::windowProc(
     return DefWindowProcW(hwnd, msg, wp, lp);
 }
 
-LRESULT RouterGroupWidget::handleMessage(UINT msg, WPARAM /*wp*/, LPARAM lp)
+LRESULT RouterGroupWidget::handleMessage(UINT msg, WPARAM wp, LPARAM lp)
 {
     switch (msg)
     {
@@ -147,7 +147,7 @@ LRESULT RouterGroupWidget::handleMessage(UINT msg, WPARAM /*wp*/, LPARAM lp)
             return 0;
 
         default:
-            return DefWindowProcW(hwnd_, msg, 0, lp);
+            return DefWindowProcW(hwnd_, msg, wp, lp);
     }
 }
 
