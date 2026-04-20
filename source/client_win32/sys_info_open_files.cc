@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_open_files.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -59,6 +61,16 @@ void addColumns(HWND list)
 void setSubItem(HWND list, int row, int col, const std::wstring& text)
 {
     ListView_SetItemText(list, row, col, const_cast<wchar_t*>(text.c_str()));
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
 }
 
 }  // namespace
@@ -203,6 +215,32 @@ void SysInfoOpenFiles::setOpenFiles(const std::vector<OpenFile>& files)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoOpenFiles::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_open_files())
+        return;
+
+    std::vector<OpenFile> files;
+    const proto::system_info::OpenFiles& of = si.open_files();
+
+    for (int i = 0; i < of.open_file_size(); ++i)
+    {
+        const proto::system_info::OpenFiles::OpenFile& p = of.open_file(i);
+
+        OpenFile f;
+        f.filePath  = toWide(p.file_path());
+        f.username  = toWide(p.user_name());
+
+        wchar_t buf[32];
+        swprintf(buf, 32, L"%u", p.lock_count());
+        f.locksCount = buf;
+
+        files.push_back(std::move(f));
+    }
+
+    setOpenFiles(files);
 }
 
 }  // namespace aspia::client_win32

@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_local_users.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -67,6 +69,16 @@ void setSubItem(HWND list, int row, int col, const std::wstring& text)
 const wchar_t* boolText(bool value)
 {
     return value ? L"Yes" : L"No";
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
 }
 
 }  // namespace
@@ -214,6 +226,46 @@ void SysInfoLocalUsers::setUsers(const std::vector<LocalUser>& users)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoLocalUsers::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_local_users())
+        return;
+
+    std::vector<LocalUser> users;
+    const proto::system_info::LocalUsers& lu = si.local_users();
+
+    for (int i = 0; i < lu.local_user_size(); ++i)
+    {
+        const proto::system_info::LocalUsers::LocalUser& p = lu.local_user(i);
+
+        LocalUser u;
+        u.name                = toWide(p.name());
+        u.fullName            = toWide(p.full_name());
+        u.description         = toWide(p.comment());
+        u.disabled            = p.disabled();
+        u.passwordNeverExpires = p.dont_expire_password();
+
+        // Format last logon time from uint64 Unix timestamp.
+        if (p.last_logon_time() != 0)
+        {
+            __time64_t t = static_cast<__time64_t>(p.last_logon_time());
+            struct tm tm_val = {};
+            if (_gmtime64_s(&tm_val, &t) == 0)
+            {
+                wchar_t buf[64];
+                swprintf(buf, 64, L"%04d-%02d-%02d %02d:%02d:%02d",
+                         tm_val.tm_year + 1900, tm_val.tm_mon + 1, tm_val.tm_mday,
+                         tm_val.tm_hour, tm_val.tm_min, tm_val.tm_sec);
+                u.lastLogon = buf;
+            }
+        }
+
+        users.push_back(std::move(u));
+    }
+
+    setUsers(users);
 }
 
 }  // namespace aspia::client_win32

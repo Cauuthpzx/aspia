@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_monitors.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -63,6 +65,16 @@ void addColumns(HWND list)
 void setSubItem(HWND list, int row, int col, const std::wstring& text)
 {
     ListView_SetItemText(list, row, col, const_cast<wchar_t*>(text.c_str()));
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
 }
 
 }  // namespace
@@ -212,6 +224,66 @@ void SysInfoMonitors::setMonitors(const std::vector<Monitor>& monitors)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoMonitors::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_monitors())
+        return;
+
+    std::vector<Monitor> monitors;
+    const proto::system_info::Monitors& ms = si.monitors();
+
+    for (int i = 0; i < ms.monitor_size(); ++i)
+    {
+        const proto::system_info::Monitors::Monitor& p = ms.monitor(i);
+
+        Monitor m;
+        m.name         = toWide(p.monitor_name());
+        m.manufacturer = toWide(p.manufacturer_name());
+        m.modelNumber  = toWide(p.monitor_id());
+        m.serialNumber = toWide(p.serial_number());
+
+        // Production date: week_of_manufacture / year_of_manufacture
+        if (p.year_of_manufacture() != 0)
+        {
+            wchar_t buf[64];
+            if (p.week_of_manufacture() != 0)
+                swprintf(buf, 64, L"Week %d, %d", p.week_of_manufacture(), p.year_of_manufacture());
+            else
+                swprintf(buf, 64, L"%d", p.year_of_manufacture());
+            m.productionDate = buf;
+        }
+
+        // Physical size in cm
+        if (p.max_horizontal_image_size() != 0 && p.max_vertical_image_size() != 0)
+        {
+            wchar_t buf[64];
+            swprintf(buf, 64, L"%d x %d cm",
+                     p.max_horizontal_image_size(), p.max_vertical_image_size());
+            m.size = buf;
+        }
+
+        // Resolution
+        if (p.horizontal_resolution() != 0 && p.vertical_resoulution() != 0)
+        {
+            wchar_t buf[64];
+            swprintf(buf, 64, L"%d x %d", p.horizontal_resolution(), p.vertical_resoulution());
+            m.resolution = buf;
+        }
+
+        // Vertical frequency range
+        if (p.min_vertical_rate() != 0 || p.max_vertical_rate() != 0)
+        {
+            wchar_t buf[64];
+            swprintf(buf, 64, L"%d - %d Hz", p.min_vertical_rate(), p.max_vertical_rate());
+            m.verticalFrequency = buf;
+        }
+
+        monitors.push_back(std::move(m));
+    }
+
+    setMonitors(monitors);
 }
 
 }  // namespace aspia::client_win32

@@ -45,6 +45,8 @@
 #include <string>
 #include <vector>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 class SysInfoProcesses
@@ -85,6 +87,7 @@ public:
     // Replaces the contents of the list with |processes|. Called whenever
     // a fresh snapshot arrives from the host over IPC.
     void setProcesses(const std::vector<Process>& processes);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

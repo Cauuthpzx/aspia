@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_local_user_groups.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -57,6 +59,16 @@ void addColumns(HWND list)
 void setSubItem(HWND list, int row, int col, const std::wstring& text)
 {
     ListView_SetItemText(list, row, col, const_cast<wchar_t*>(text.c_str()));
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
 }
 
 }  // namespace
@@ -200,6 +212,27 @@ void SysInfoLocalUserGroups::setGroups(const std::vector<LocalUserGroup>& groups
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoLocalUserGroups::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_local_user_groups())
+        return;
+
+    std::vector<LocalUserGroup> groups;
+    const proto::system_info::LocalUserGroups& lug = si.local_user_groups();
+
+    for (int i = 0; i < lug.local_user_group_size(); ++i)
+    {
+        const proto::system_info::LocalUserGroups::LocalUserGroup& p = lug.local_user_group(i);
+
+        LocalUserGroup g;
+        g.name        = toWide(p.name());
+        g.description = toWide(p.comment());
+        groups.push_back(std::move(g));
+    }
+
+    setGroups(groups);
 }
 
 }  // namespace aspia::client_win32

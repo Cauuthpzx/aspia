@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 class SysInfoPrinters
@@ -57,6 +59,7 @@ public:
     void move(int x, int y, int width, int height);
 
     void setPrinters(const std::vector<Printer>& printers);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

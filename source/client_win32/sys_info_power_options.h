@@ -24,6 +24,8 @@
 #ifndef CLIENT_WIN32_SYS_INFO_POWER_OPTIONS_H
 #define CLIENT_WIN32_SYS_INFO_POWER_OPTIONS_H
 
+#include "proto/system_info.h"
+
 #include <windows.h>
 #include <commctrl.h>
 
@@ -75,6 +77,8 @@ public:
 
     // Removes all items from the tree.
     void clear();
+
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

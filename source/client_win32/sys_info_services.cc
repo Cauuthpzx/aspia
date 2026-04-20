@@ -20,9 +20,51 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
+
+std::wstring serviceStatusToString(proto::system_info::Services::Service::Status status)
+{
+    using S = proto::system_info::Services::Service;
+    switch (status)
+    {
+        case S::STATUS_RUNNING:          return L"Running";
+        case S::STATUS_STOPPED:          return L"Stopped";
+        case S::STATUS_PAUSED:           return L"Paused";
+        case S::STATUS_START_PENDING:    return L"Start Pending";
+        case S::STATUS_STOP_PENDING:     return L"Stop Pending";
+        case S::STATUS_CONTINUE_PENDING: return L"Continue Pending";
+        case S::STATUS_PAUSE_PENDING:    return L"Pause Pending";
+        default:                         return L"Unknown";
+    }
+}
+
+std::wstring serviceStartupToString(proto::system_info::Services::Service::StartupType st)
+{
+    using S = proto::system_info::Services::Service;
+    switch (st)
+    {
+        case S::STARTUP_TYPE_AUTO_START:   return L"Auto Start";
+        case S::STARTUP_TYPE_DEMAND_START: return L"Manual";
+        case S::STARTUP_TYPE_DISABLED:     return L"Disabled";
+        case S::STARTUP_TYPE_BOOT_START:   return L"Boot Start";
+        case S::STARTUP_TYPE_SYSTEM_START: return L"System Start";
+        default:                           return L"Unknown";
+    }
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_services.h). Reserved range
@@ -211,6 +253,25 @@ void SysInfoServices::setServices(const std::vector<Service>& services)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoServices::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_services()) return;
+    std::vector<Service> services;
+    for (const auto& s : si.services().service())
+    {
+        Service svc;
+        svc.displayName    = toWide(s.display_name());
+        svc.name           = toWide(s.name());
+        svc.description    = toWide(s.description());
+        svc.status         = serviceStatusToString(s.status());
+        svc.startupType    = serviceStartupToString(s.startup_type());
+        svc.account        = toWide(s.start_name());
+        svc.executableFile = toWide(s.binary_path());
+        services.push_back(std::move(svc));
+    }
+    setServices(services);
 }
 
 }  // namespace aspia::client_win32

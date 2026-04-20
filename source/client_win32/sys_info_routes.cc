@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_routes.h). Reserved range
@@ -205,6 +217,26 @@ void SysInfoRoutes::setRoutes(const std::vector<Route>& routes)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoRoutes::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_routes()) return;
+    std::vector<Route> routes;
+    for (const auto& r : si.routes().route())
+    {
+        Route route;
+        route.destination = toWide(r.destonation());
+        route.netmask     = toWide(r.mask());
+        route.gateway     = toWide(r.gateway());
+
+        wchar_t numBuf[32];
+        swprintf(numBuf, 32, L"%u", r.metric());
+        route.metric = numBuf;
+
+        routes.push_back(std::move(route));
+    }
+    setRoutes(routes);
 }
 
 }  // namespace aspia::client_win32

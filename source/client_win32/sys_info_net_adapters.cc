@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_net_adapters.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -63,6 +65,30 @@ void addColumns(HWND list)
 void setSubItem(HWND list, int row, int col, const std::wstring& text)
 {
     ListView_SetItemText(list, row, col, const_cast<wchar_t*>(text.c_str()));
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
+
+// Join a repeated string field (UTF-8) into a comma-separated wide string.
+template<typename RepeatedField>
+std::wstring joinWide(const RepeatedField& field)
+{
+    std::wstring result;
+    for (int i = 0; i < field.size(); ++i)
+    {
+        if (i != 0)
+            result.append(L", ");
+        result.append(toWide(field.Get(i)));
+    }
+    return result;
 }
 
 }  // namespace
@@ -211,6 +237,47 @@ void SysInfoNetAdapters::setAdapters(const std::vector<NetAdapter>& adapters)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoNetAdapters::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_network_adapters())
+        return;
+
+    std::vector<NetAdapter> adapters;
+    const proto::system_info::NetworkAdapters& na = si.network_adapters();
+
+    for (int i = 0; i < na.adapter_size(); ++i)
+    {
+        const proto::system_info::NetworkAdapters::Adapter& p = na.adapter(i);
+
+        NetAdapter a;
+        a.adapterName    = toWide(p.adapter_name());
+        a.connectionName = toWide(p.connection_name());
+        a.macAddress     = toWide(p.mac());
+        a.dhcpEnabled    = p.dhcp_enabled() ? L"Yes" : L"No";
+        a.gateways       = joinWide(p.gateway());
+        a.dnsServers     = joinWide(p.dns());
+
+        // Build IP address list: "ip/mask, ip/mask, ..."
+        std::wstring ipList;
+        for (int j = 0; j < p.address_size(); ++j)
+        {
+            if (j != 0)
+                ipList.append(L", ");
+            ipList.append(toWide(p.address(j).ip()));
+            if (!p.address(j).mask().empty())
+            {
+                ipList.append(L"/");
+                ipList.append(toWide(p.address(j).mask()));
+            }
+        }
+        a.ipAddresses = std::move(ipList);
+
+        adapters.push_back(std::move(a));
+    }
+
+    setAdapters(adapters);
 }
 
 }  // namespace aspia::client_win32

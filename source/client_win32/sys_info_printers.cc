@@ -20,9 +20,21 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_printers.h). Reserved range
@@ -211,6 +223,23 @@ void SysInfoPrinters::setPrinters(const std::vector<Printer>& printers)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoPrinters::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_printers()) return;
+    std::vector<Printer> printers;
+    for (const auto& p : si.printers().printer())
+    {
+        Printer pr;
+        pr.name      = toWide(p.name());
+        pr.isDefault = p.is_default();
+        pr.port      = toWide(p.port());
+        pr.driver    = toWide(p.driver());
+        pr.shareName = toWide(p.share_name());
+        printers.push_back(std::move(pr));
+    }
+    setPrinters(printers);
 }
 
 }  // namespace aspia::client_win32

@@ -20,9 +20,31 @@
 
 #include <commctrl.h>
 
+#include "proto/system_info.h"
+
 namespace aspia::client_win32 {
 
 namespace {
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
+}
+
+std::wstring formatSize(uint64_t bytes)
+{
+    wchar_t buf[64];
+    if (bytes >= 1024ULL*1024*1024) swprintf(buf,64,L"%.1f GB",bytes/(1024.0*1024*1024));
+    else if (bytes >= 1024ULL*1024) swprintf(buf,64,L"%.1f MB",bytes/(1024.0*1024));
+    else if (bytes >= 1024)         swprintf(buf,64,L"%.1f KB",bytes/1024.0);
+    else                             swprintf(buf,64,L"%llu B",(unsigned long long)bytes);
+    return buf;
+}
 
 // Control IDs - kept local until they are formally added to resource.h
 // (see comment block at top of sys_info_video_adapters.h). Reserved range
@@ -213,6 +235,26 @@ void SysInfoVideoAdapters::setAdapters(const std::vector<VideoAdapter>& adapters
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoVideoAdapters::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_video_adapters()) return;
+    std::vector<VideoAdapter> adapters;
+    for (const auto& a : si.video_adapters().adapter())
+    {
+        VideoAdapter va;
+        va.name          = toWide(a.description());
+        va.adapterString = toWide(a.adapter_string());
+        va.biosString    = toWide(a.bios_string());
+        va.chipType      = toWide(a.chip_type());
+        va.dacType       = toWide(a.dac_type());
+        va.memorySize    = formatSize(a.memory_size());
+        va.driverVersion = toWide(a.driver_version());
+        va.driverDate    = toWide(a.driver_date());
+        adapters.push_back(std::move(va));
+    }
+    setAdapters(adapters);
 }
 
 }  // namespace aspia::client_win32

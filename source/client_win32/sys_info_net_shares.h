@@ -24,6 +24,8 @@
 #ifndef CLIENT_WIN32_SYS_INFO_NET_SHARES_H
 #define CLIENT_WIN32_SYS_INFO_NET_SHARES_H
 
+#include "proto/system_info.h"
+
 #include <windows.h>
 #include <commctrl.h>
 
@@ -56,6 +58,7 @@ public:
     void move(int x, int y, int width, int height);
 
     void setShares(const std::vector<NetShare>& shares);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

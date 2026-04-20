@@ -24,6 +24,8 @@
 #ifndef CLIENT_WIN32_SYS_INFO_MONITORS_H
 #define CLIENT_WIN32_SYS_INFO_MONITORS_H
 
+#include "proto/system_info.h"
+
 #include <windows.h>
 #include <commctrl.h>
 
@@ -58,6 +60,7 @@ public:
     void move(int x, int y, int width, int height);
 
     void setMonitors(const std::vector<Monitor>& monitors);
+    void setFromProto(const proto::system_info::SystemInfo& si);
 
 private:
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

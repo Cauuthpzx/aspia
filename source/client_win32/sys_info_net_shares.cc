@@ -18,6 +18,8 @@
 
 #include "client_win32/sys_info_net_shares.h"
 
+#include "proto/system_info.h"
+
 #include <commctrl.h>
 
 namespace aspia::client_win32 {
@@ -62,6 +64,16 @@ void addColumns(HWND list)
 void setSubItem(HWND list, int row, int col, const std::wstring& text)
 {
     ListView_SetItemText(list, row, col, const_cast<wchar_t*>(text.c_str()));
+}
+
+std::wstring toWide(const std::string& s)
+{
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring r(n - 1, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, r.data(), n);
+    return r;
 }
 
 }  // namespace
@@ -209,6 +221,37 @@ void SysInfoNetShares::setShares(const std::vector<NetShare>& shares)
 
     SendMessageW(list_, WM_SETREDRAW, TRUE, 0);
     InvalidateRect(list_, nullptr, TRUE);
+}
+
+void SysInfoNetShares::setFromProto(const proto::system_info::SystemInfo& si)
+{
+    if (!si.has_network_shares())
+        return;
+
+    std::vector<NetShare> shares;
+    const proto::system_info::NetworkShares& ns = si.network_shares();
+
+    for (int i = 0; i < ns.share_size(); ++i)
+    {
+        const proto::system_info::NetworkShares::Share& p = ns.share(i);
+
+        NetShare s;
+        s.name        = toWide(p.name());
+        s.type        = toWide(p.type());
+        s.localPath   = toWide(p.local_path());
+        s.description = toWide(p.description());
+
+        wchar_t buf[32];
+        swprintf(buf, 32, L"%u", p.current_uses());
+        s.currentUses = buf;
+
+        swprintf(buf, 32, L"%u", p.max_uses());
+        s.maxUses = buf;
+
+        shares.push_back(std::move(s));
+    }
+
+    setShares(shares);
 }
 
 }  // namespace aspia::client_win32
