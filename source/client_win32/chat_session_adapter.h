@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 //
-// Phase-2 adapter: bridges client::ClientChat (Qt signals/slots) to the
+// Phase-2 adapter: bridges client::ClientTextChat (Qt signals/slots) to the
 // Win32 ChatSessionWindow (kWmChatSend notification + appendMessage).
 //
 
@@ -25,7 +25,7 @@
 #include <QObject>
 
 namespace proto::chat { class Chat; }
-namespace client { class ClientChat; }
+namespace client { class ClientTextChat; }
 
 namespace aspia::client_win32 {
 
@@ -36,7 +36,7 @@ class ChatSessionAdapter : public QObject
     Q_OBJECT
 
 public:
-    ChatSessionAdapter(client::ClientChat* client,
+    ChatSessionAdapter(client::ClientTextChat* client,
                        ChatSessionWindow* window,
                        QObject* parent = nullptr);
     ~ChatSessionAdapter() override;
@@ -47,7 +47,7 @@ private slots:
 private:
     void wireChatWindowMessages();
 
-    client::ClientChat* client_;
+    client::ClientTextChat* client_;
     ChatSessionWindow* window_;
 
     Q_DISABLE_COPY_MOVE(ChatSessionAdapter)

@@ -52,7 +52,7 @@ static std::wstring utf8ToWide(const std::string& s)
 
 // ---------------------------------------------------------------------------
 
-ChatSessionAdapter::ChatSessionAdapter(client::ClientChat* client,
+ChatSessionAdapter::ChatSessionAdapter(client::ClientTextChat* client,
                                        ChatSessionWindow* window,
                                        QObject* parent)
     : QObject(parent),
@@ -63,7 +63,7 @@ ChatSessionAdapter::ChatSessionAdapter(client::ClientChat* client,
     Q_ASSERT(window_);
 
     // Incoming chat messages from the host (may arrive on IO thread).
-    connect(client_, &client::ClientChat::sig_chatMessage,
+    connect(client_, &client::ClientTextChat::sig_chatMessage,
             this, &ChatSessionAdapter::onChatMessage,
             Qt::QueuedConnection);
 
@@ -143,10 +143,7 @@ void ChatSessionAdapter::wireChatWindowMessages()
                                          proto::chat::Chat chatMsg;
                                          chatMsg.mutable_chat_message()->set_text(utf8);
 
-                                         QMetaObject::invokeMethod(
-                                             adapter->client_, "onChatMessage",
-                                             Qt::QueuedConnection,
-                                             Q_ARG(proto::chat::Chat, chatMsg));
+                                         adapter->client_->onChatMessage(chatMsg);
                                      }
                                      return 0;
                                  }
