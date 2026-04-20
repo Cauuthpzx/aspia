@@ -38,10 +38,12 @@
 #define IDD_FILE_REMOVE        310
 #define IDD_LOCAL_COMPUTER     330
 #define IDD_ROUTER_USER        340
+#define IDD_LOCAL_GROUP        350
 
 // Accelerator / message IDs for top-level windows (no dialog template)
 #define IDR_TASKMGR_ACCEL      290
 #define IDM_CHAT_SEND          320
+#define IDR_ROUTER_MGR_ACCEL   400
 
 // Main window child-control IDs
 #define IDC_MAIN_TABS         1001
@@ -184,6 +186,11 @@
 #define IDC_LOCAL_COMPUTER_SHOW_PASSWORD  3306
 #define IDC_LOCAL_COMPUTER_COMMENT        3307
 
+// Local group dialog control IDs
+#define IDC_LOCAL_GROUP_PARENT    3501
+#define IDC_LOCAL_GROUP_NAME      3502
+#define IDC_LOCAL_GROUP_COMMENT   3503
+
 // Router user dialog control IDs
 #define IDC_ROUTER_USER_USERNAME                 3400
 #define IDC_ROUTER_USER_PASSWORD                 3401
@@ -197,6 +204,52 @@
 #define IDC_ROUTER_USER_SESSION_SYSTEM_INFO      3413
 #define IDC_ROUTER_USER_SESSION_TEXT_CHAT        3414
 #define IDC_ROUTER_USER_SESSION_PORT_FORWARDING  3415
+
+// Router manager window control IDs (top-level window)
+#define IDC_ROUTER_MGR_TABS          4000
+#define IDC_ROUTER_MGR_LIST_USERS    4001
+#define IDC_ROUTER_MGR_LIST_HOSTS    4002
+#define IDC_ROUTER_MGR_LIST_ACTIVE   4003
+#define IDC_ROUTER_MGR_STATUSBAR     4004
+#define IDC_ROUTER_MGR_TOOLBAR       4005
+#define IDC_ROUTER_MGR_ADD           4010
+#define IDC_ROUTER_MGR_EDIT          4011
+#define IDC_ROUTER_MGR_REMOVE        4012
+#define IDC_ROUTER_MGR_REFRESH       4013
+#define IDC_ROUTER_MGR_DISCONNECT    4014
+#define IDC_ROUTER_MGR_REFRESH_ACT   4015
+#define IDC_ROUTER_MGR_CLOSE         4016
+
+// File panel (dual-pane file manager) control IDs
+#define IDC_FILE_PANEL_HEADER       4100
+#define IDC_FILE_PANEL_DRIVE        4101
+#define IDC_FILE_PANEL_ADDRESS      4102
+#define IDC_FILE_PANEL_TOOLBAR      4103
+#define IDC_FILE_PANEL_LIST         4104
+#define IDC_FILE_PANEL_STATUS       4105
+#define IDC_FILE_PANEL_TB_UP        4110
+#define IDC_FILE_PANEL_TB_REFRESH   4111
+#define IDC_FILE_PANEL_TB_HOME      4112
+#define IDC_FILE_PANEL_TB_NEWFOLDER 4113
+#define IDC_FILE_PANEL_TB_DELETE    4114
+#define IDC_FILE_PANEL_TB_SEND      4115
+#define IDC_FILE_PANEL_TB_UPLOAD    4116
+#define IDC_FILE_PANEL_TB_DOWNLOAD  4117
+
+// File transfer session window control IDs
+#define IDC_FT_SESSION_LOCAL_PANEL   4200
+#define IDC_FT_SESSION_REMOTE_PANEL  4201
+#define IDC_FT_SESSION_STATUSBAR     4202
+
+// Hosts tab control IDs
+#define IDC_HOSTS_SEARCH    4300
+#define IDC_HOSTS_TREE      4301
+#define IDC_HOSTS_LIST      4302
+
+// Sys-info child widgets list control IDs
+#define IDC_SYSINFO_PROCESSES_LIST   4400
+#define IDC_SYSINFO_SUMMARY_TREE     4500
+#define IDC_SYSINFO_APPS_LIST        4600
 
 // Menu command IDs
 #define ID_FILE_EXIT         40001

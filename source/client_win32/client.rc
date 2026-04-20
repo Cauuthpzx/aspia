@@ -424,3 +424,20 @@ BEGIN
     DEFPUSHBUTTON   "OK",                     IDOK,                                168, 200,  50,  14
     PUSHBUTTON      "Cancel",                 IDCANCEL,                            223, 200,  50,  14
 END
+
+IDD_LOCAL_GROUP DIALOGEX 0, 0, 260, 160
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Group"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Parent Group:", -1,                          7,   9,  60,   9
+    COMBOBOX        IDC_LOCAL_GROUP_PARENT,                      70,   7, 183,  60,
+                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Name:",         -1,                          7,  25,  60,   9
+    EDITTEXT        IDC_LOCAL_GROUP_NAME,                        70,  23, 183,  12, ES_AUTOHSCROLL
+    LTEXT           "Comment:",      -1,                          7,  42, 246,   9
+    EDITTEXT        IDC_LOCAL_GROUP_COMMENT,                      7,  54, 246,  84,
+                    ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | WS_VSCROLL
+    DEFPUSHBUTTON   "OK",            IDOK,                       148, 140,  50,  14
+    PUSHBUTTON      "Cancel",        IDCANCEL,                   203, 140,  50,  14
+END
