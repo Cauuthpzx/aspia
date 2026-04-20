@@ -178,6 +178,7 @@ message(STATUS "Git commit count: ${GIT_COMMIT_COUNT}")
 
 add_subdirectory(base)
 add_subdirectory(client)
+add_subdirectory(client_win32)
 add_subdirectory(common)
 add_subdirectory(console)
 add_subdirectory(drivers)
